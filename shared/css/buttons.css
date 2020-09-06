@@ -1,0 +1,30 @@
+.blue {
+    background-color: #304FFE; color: whitesmoke;
+}
+.red {
+    background-color: #D32F2F; color: whitesmoke;
+}
+
+.green {
+    background-color: #388E3C; color: whitesmoke;
+}
+button.padding {
+    padding: 0.3em;
+    padding-left: 1em; padding-right: 1em;
+}
+button.big-radius {
+    border-radius: 20em;
+}
+button.margin {
+    margin: 0.4em;
+}
+
+button {cursor: pointer; text-align: center; outline: none;border: 0px; border-radius: 0.3em; font-size: 12pt;}
+button:hover {
+    box-shadow: 0px 0px 3px 2px rgb(200, 200, 200);
+}
+
+
+button.outline-blue {
+    border: solid #64b5f6 0.1em;
+}

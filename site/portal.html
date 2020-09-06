@@ -1,0 +1,8 @@
+<script>
+    let perm = parseInt(sessionStorage.getItem('pm'));
+    switch(perm) {
+        case 0:  location.href = 'site/root.html'; break;
+        case 1:  location.href = 'site/admin.html'; break;
+        case 2: location.href = 'site/client.html'; break;
+    }
+</script>

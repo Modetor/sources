@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<head>
+	<title>Modetor Group</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="../shared/js/swal.js"></script>
+	<script type="text/javascript" src="../shared/js/q.tooltip.js"></script>
+	<link rel="stylesheet" type="text/css" href="../shared/css/swal.css">
+	<script type="text/javascript" src="../shared/js/q.js"></script>
+	<link rel="stylesheet" type="text/css" href="../shared/css/q.css">
+	<link rel="stylesheet" type="text/css" href="../shared/css/q.tooltip.css">
+	<link rel="stylesheet" type="text/css" href="../shared/css/q.menu.css">
+	<script src="test.js"></script>
+</head>
+<body oncontextmenu="return  false" oncopy="return false" onpaste="return false" class="App">
+	<div element-type="ActionBar">
+		<h3 element-type="ActionBar.Title">
+			منظومة صيدلية : Premium Business 
+		</h3>
+		<img element-type="ActionBar.MenuIcon" src="assest/menu.png">
+	</div>
+	<Page element-type="MainView"><br/>
+		<!-- contains boxes only -->
+		<grid element-type="View.Grid">
+			<box class="CPOINT" id="f1" color="fff" has-border="true" box-size="Standard">
+					<img src="test/assest/medical_product_mainview.png" /><br />
+				<b>1</b>
+			</box>
+			<box class="CPOINT" color="fff" has-border="true" box-size="Standard">
+				<img src="test/assest/medical_product_mainview.png" /><br />
+				<b>2</b>
+			</box>
+			<box class="CPOINT" color="fff" has-border="true" box-size="Standard">
+					<img src="test/assest/medical_product_mainview.png" /><br />
+				<b>3</b>
+			</box>
+			<box class="CPOINT" color="fff" has-border="true" box-size="Standard">
+					<img src="test/assest/medical_product_mainview.png" /><br />
+				<b>4</b>
+			</box>
+		</grid>
+		<!-- Contains trackers only -->
+		<grid element-type="View.Grid">
+			<panel name="last_actions">
+				<p>
+					المنتجات الأكثر طلبا
+					&nbsp;&nbsp;
+				</p>
+			</panel>
+			<panel name="last_actions">
+					<p>
+						فواتير مضافة
+						&nbsp;&nbsp;
+					</p>
+			</panel>
+			
+		</grid>
+		<footer element-type="Footer"> Modetor group - 2019</footer>	
+	</Page>
+
+	<!-- Context menu element -->
+	<div style="display: none;" element-type="Context-menu">
+		<div id="products" element-type="Menu-item">
+			<img src="test/assest/back_arrow_mainview.png" />
+			<p>
+				الأدوية والمنتجات الطبية
+			</p>
+		</div>
+		<div name="products" element-type="Menu-item" style="display: none;">
+			<p>
+				قائمة المنتجات
+			</p>
+		</div>
+		<div name="products" element-type="Menu-item" style="display: none;">
+			<p>
+				المنتجات المنتهية
+			</p>
+		</div>
+		<div name="products" element-type="Menu-item" style="display: none;">
+			<p>
+				المنتجات التالفة
+			</p>
+		</div>
+		<div name="products" element-type="Menu-item" style="display: none;">
+				<p>
+					المضافة حديثا
+				</p>
+		</div>
+		<div name="products" element-type="Menu-item" style="display: none;">
+			<p>
+				المخزن
+			</p>
+		</div>
+		<div element-type="Menu-item">
+				<img src="test/assest/back_arrow_mainview.png" />
+				<p>
+					الفواتير
+				</p>
+		</div>
+	</div>
+	<div style="display: none;" element-type="Black-layer" ></div>
+	<script src="test/assest/script/ui_tasks.js"></script>
+	<script type="text/javascript">
+		var first = q("#f1");
+		ShowToolTip(first);
+		q.ready(() =>
+		{
+			swal.fire(Test.UserData);
+			black_layer.do("click", () =>{
+				hide();
+				menuicon.Tag = !menuicon.Tag;
+			});
+			let menuicon = q("img[element-type=\"ActionBar.MenuIcon\"]");
+			menuicon.Tag = false;
+			menuicon.do("click", () => {
+				if(!menuicon.Tag)  show();
+				else  hide();
+				menuicon.Tag = !menuicon.Tag;
+			});
+		});
+		// 
+		fixUI();
+		AssocMenuEvents();
+		window.onresize = () => {
+			fixUI();
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+	Page::-webkit-scrollbar {
+    width: 13px;  /* Remove scrollbar space */
+    background: rgb(207, 207, 207);  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+Page::-webkit-scrollbar-thumb {
+    background: rgb(158, 158, 158);
+}
+
+
+-->

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<script type="text/javascript" src="../shared/js/swal.js"></script>
+	<link rel="stylesheet" type="text/css" href="../shared/css/swal.css">
+	<script type="text/javascript" src="../shared/js/q.js"></script>
+	<script type="text/javascript" src="../shared/css/q.alert.css"></script>
+	<script src="test.js"></script>
+	<style type="text/css">
+		
+		.Container {
+			margin: 0 auto;
+			background: #f9f9f9;
+			box-shadow: rgb(60, 60, 60) 0px 0px 3px 1px;
+			border-radius: 0.5em;
+			padding: 1.5em;
+			width: 65%;
+			height: auto;
+			margin-top: 5em;
+		}
+
+		.Container > h1 {
+			font-style: bold!important;
+			width: 100%;
+			text-align: center;
+			font-size: 30pt;
+
+		}
+		.Container > h3 {
+			margin-left: 24.5%;
+			margin-top: 1em;
+			color: #797979;
+		}
+		.Container > input { 
+			position: relative;
+			left: 25%;
+			width: 50%;
+			height: 2.3em;
+			border-style: solid;
+			border-color: #009aea;
+			border-width: 0.05em;
+			border-radius: 0.7em;
+			box-shadow: #dbdbdb 0px 0px 1px 1px;
+			outline: none;
+			text-align: center;
+			font-size: 15pt;
+		}
+		.Container > input:hover {
+			box-shadow: #9f9f 0px 0px 4px 2px;
+		}
+		.Container > button {
+			margin: 0 auto;
+    		display: block;
+    		margin-top: 2em;
+    		padding: 1em;
+    		width: 30%;
+    		border: none;
+    		border-radius: 0.5em;
+    		background: #2E7D32; 
+    		color: whitesmoke;
+    		outline: none;
+		}
+		.Container > button:hover {
+			box-shadow: #9f9f 0px 0px 3px 4px;
+		}
+		.Container > button:active {
+			box-shadow: none;
+		}
+
+		@media only screen and (max-width: 950px) {
+			.Container > input { width: 80%;left: 10%; }
+			.Container > h3 { margin-left: 10%; }
+		}
+	</style>
+</head>
+<body style="background-image: url('assest/bg_home.jpg'); background-position: center; background-repeat: no-repeat; background-origin: content-box;">
+
+	<div class="Container">
+		<h1>Sign in</h1> 
+		<br>
+		<h3>User name</h3>
+		<input type="text" id="mail" />
+		<h3>Password</h3>
+		<input type="password" id="pass" />
+		<br>
+		<button id="sign">Continue</button>
+	</div>
+
+	<script type="text/javascript">
+		
+		let mail = q("#mail"),
+			pass = q("#pass"),
+			sign = q("#sign");
+
+		sign.do("click", ()=> {
+			let username = mail.Value().trim(),
+				userpass = pass.Value().trim();
+			q.Ajax.Post("test/backend/login.php", {un:username,up:userpass}, (v)=> {
+				if(v.startsWith('1')) {
+					v = v.split(';')[1];
+					Test.UserData = JSON.parse(v);
+					swal.fire("Logged in");
+					location.href = 'test/ui.html';
+				}
+				else swal.fire(v.substring(1));
+			});
+		});
+
+		
+	</script>
+</body>
+</html>

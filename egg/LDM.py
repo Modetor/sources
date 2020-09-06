@@ -1,0 +1,28 @@
+
+
+class LDM:
+	"""docstring for LDM"""
+	class Permissions:
+		Low = PERMISSION_LOW
+		Read = PERMISSION_READ
+		ReadWrite = PERMISSION_READ_WRITE
+		Admin = PERMISSION_ADMIN
+		Root = PERMISSION_ROOT
+
+	class DataTypes:
+		Int = DATATYPE_INT
+		Float = DATATYPE_FLOAT
+		Double = DATATYPE_DOUBLE
+		Bool = DATATYPE_BOOL
+		String = DATATYPE_STRING
+		Object = DATATYPE_OBJECT
+		Link = DATATYPE_LINK
+
+	class TableTypes:
+		Base = TABLETYPE_BASE
+		NotBase = TABLETYPE_NOT_BASE
+		CSV = TABLETYPE_CSV
+		TypedCSV = TABLETYPE_TYPED_CSV
+		Objective = TABLETYPE_OBJECTIVE
+		Notset = TABLETYPE_NOTSET
+		

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Libyan society messenger</title>
+	<meta charset="utf-8" />
+	<meta name="theme-color" content="#497495">
+	<meta property="og:title" content="Modetor - Libyan society messenger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="stylesheet" type="text/css" href="../shared/css/swal.css">
+    <link rel="stylesheet" type="text/css" href="../shared/css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/anim.css">
+    <link rel="stylesheet" type="text/css" href="css/buttons.css">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 500px) and (min-height: 550px)" href="css/layout.css">
+
+	<script type="text/javascript" src="../shared/js/q.js"></script>
+	<script type="text/javascript" src="../shared/css/q.alert.css"></script>
+	<script type="text/javascript" src="../shared/js/swal.js"></script>
+</head>
+<body style="background-image: url(res/bg.jpg);background-position: center; background-repeat: no-repeat; background-origin: content-box; background-attachment:scroll;">
+	
+	
+	<div class="innerWindow">
+		<h5 title>Modetor Cloud-based apps</h5>
+
+		<p>Welcome to libyan society messanger platform.</p>
+
+		<div align-center style="margin-top: 1em;">
+			<button id="Create_New_Account_BUTTON" 
+				border-radius="small"
+				border-style="solid"
+				border-width="small"
+				color="red"
+				style="padding: 0.3em; font-family: SFRB">Create new Account</button>
+			
+			<button id="Login_BUTTON" 
+				border-radius="small"
+				border-style="solid"
+				border-width="small"
+				style="padding: 0.3em; font-family: SFRB">I have account</button>
+		</div>
+
+		<div container>
+			<div id="loginSlide_DIV" layout_width="none" >
+					<h6 align-center style="margin-top: 1em; font-family: SFDB">Login</h6>
+					<form align-center action="">
+						<div input-area="v1">
+								<font>Email/Phone No.</font>
+								<input type="email" name="userIdentity" value="MohammadAlbay99@gmail.com" />
+						</div>
+						<div input-area="v1" >
+								<font>Password</font>
+								<input type="password" name="userPass" value="mqlprovider" />
+						</div>
+						<button name="loginBUTTON" onclick="swal.fire('Hi'); return false;" style="margin-top: 1em;" class="SubmitButton_v1">Login</button>
+					</form>
+					<script type="text/javascript">
+						var l_input_id = q('input[name="userIdentity"]');
+						var l_input_pass = q('input[name="userPass"]');
+
+						q('button[name="loginBUTTON"]').Target.onclick = () => {
+							var lid_value = l_input_id.Value().trim();
+							var lpass_value = l_input_pass.Value().trim();
+							q.Ajax.Post('top/backend/login.php', {user_id: lid_value, user_pass: lpass_value}, (v) => {
+								if(v.startsWith('1')) {
+									location.href = 'top/profile.html';
+								}
+								else swal.fire(v.substring(1));
+							});
+							return false;
+						};
+
+					</script>
+			</div>
+			<div id="singupSlide_DIV" layout_width="none" style="overflow-y: auto;">
+					<h6 align-center style="margin-top: 1em; font-family: SFDB">Signup</h6>
+					<form align-center>
+						<div input-area="v1">
+								<font>Name</font>
+								<input type="text" name="username" />
+						</div>
+						<div input-area="v1">
+								<font>Email</font>
+								<input type="email" name="usermail" value="MohammadAlbay99@gmail.com" />
+						</div>
+						<div input-area="v1">
+								<font>Password</font>
+								<input type="password" name="userpass" />
+						</div>
+						<div input-area="v1">
+								<font>Confirm-Password</font>
+								<input type="password" name="userconfirmpass" />
+						</div>
+						<div input-area="v1" >
+								<font>Birth date</font>
+								<input type="date" name="userbirthdate" />
+						</div>
+						<button name="create_new_account__BUTTON" style="margin-top: 1em;" class="SubmitButton_v1">Create my account</button>
+					</form>
+					<script type="text/javascript">
+						var input_email = q("input[name='usermail']"),
+							input_name  = q("input[name='username']"),
+							input_password = q("input[name='userpass']"),
+							input_birthdate = q("input[name='userbirthdate']");
+						var btn = q("button[name='create_new_account__BUTTON']");
+						btn.Target.onclick = () => {
+							q.Ajax.Post('top/backend/create_new_account.php', {name:input_name.Value().trim(),email:input_email.Value().trim(), password: input_password.Value().trim(), birthdate: input_birthdate.Value().trim()}, (v) => {
+								if(v.startsWith("Activation code sent")) {
+									signupSlieDiv.attr("layout_width", "none");
+									activateAccountSlideDiv.attr("layout_width", "fill");
+								}
+								else {
+									document.write(v);
+									swal.fire(v);
+								}
+							});
+
+							return false;
+						};
+					</script>
+			</div>
+
+			<div id="activateAccountSlide_DIV" layout_width="none" style="overflow-y: auto;">
+				<h6 align-center style="margin-top: 1em; font-family: SFDB">Activate your account</h6>
+				<form  align-center>
+					<div input-area="v1.1">
+						<input type="text" name="ActivationCode_INPUT" />
+						<button name="CheckCode_BUTTON"
+						        style="background-color: rgb(46, 125, 50);
+						        	   border-color: rgba(27, 94, 32,1.0);
+						        	   color: whitesmoke"
+						        	   >Activate</button>
+					</div>
+				</form>
+				<script type="text/javascript">
+					var activateButton = q('button[name="CheckCode_BUTTON"]'),
+						activationCodeInput = q('input[name="ActivationCode_INPUT"]');
+
+						activateButton.Target.onclick = () => {
+							var value = activationCodeInput.Value().trim();
+							q.Ajax.Get('top/backend/activate_pending_account.php?code='+value+"&email="+input_email.Value().trim(), (v) => {
+								swal.fire(v);
+							});
+							return false;
+						};
+				</script>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script type="text/javascript" >
+		var createNewAccountButton = q("#Create_New_Account_BUTTON"),
+			loginButton = q("#Login_BUTTON");
+
+		var loginSlideDiv = q("#loginSlide_DIV"),
+			signupSlieDiv = q("#singupSlide_DIV")
+			activateAccountSlideDiv = q("#activateAccountSlide_DIV");
+
+		createNewAccountButton.do('click', () => {
+			loginSlideDiv.attr("layout_width", "none");
+			activateAccountSlideDiv.attr("layout_width", "none");
+			signupSlieDiv.attr("layout_width", "fill");
+		});
+		loginButton.do('click', () => {
+			signupSlieDiv.attr("layout_width", "none");
+			activateAccountSlideDiv.attr("layout_width", "none");
+			loginSlideDiv.attr("layout_width", "fill");
+		});
+		q.ready(() => { 
+			//swal.fire("Width: "+window.innerWidth+". Height: "+window.innerHeight); 
+			//q.Ajax.Get('top/backend/create_new_account.php?id=0', (v) => {alert(v);});
+		});
+	</script>
+
+
+
+
+
+
+	<footer style="position: absolute; left: 0px; bottom: 0em; width: 100%; text-align: center; background-color: #fff; font-family: SFRB; font-size: 10pt;">Modetor - 2020</footer>
+
+
+
+	<script type="text/javascript">
+		//swal.fire("I love you Nore");
+		//q.Ajax.Get("top/init.php",  (v)=> {
+		//		swal.fire(v);
+		//});
+	</script>
+</body>
+</html>

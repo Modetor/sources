@@ -1,0 +1,407 @@
+.none {display: none;}
+*[hidden] {display: none;}
+
+*[align-center] {display: block; text-align: -webkit-center;}
+
+
+div.appbar {
+    position: absolute; top: 0.2em; left: 0.2em; width: calc(100% - 0.4em); height: 1.7em;
+    background-color:#eee; box-shadow: 0px 0px 3px 2px  rgb(200,200,200); border-radius: 0.3em;
+}
+
+div.appbar > font[author] {
+    float: left; color:  #2962FF; margin-left: 0.6em;
+    margin-top: 0.25em; font-family: SFDB, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+div.appbar > input[product-code-field] {
+    float: right; width: 20em; height: 1.8em; background-color: rgb(240,240,240);
+    margin-right: 0.5em; margin-top: 0.44em; border: 1.5px solid rgb(100,100,100); border-radius: 0.3em;
+    outline: none;
+}
+div.appbar > img {border-radius: 50%; padding:0.1em;  margin-top: 0.235em; cursor: pointer;}
+div.appbar > img:hover {box-shadow: 0px 0px 2px 1px rgb(190,190,190);}
+div.appbar > img[right] { 
+    float: right; width: 25px; height: 25px; margin-right: 0.8em;
+}
+div.appbar > img[right]:first-of-type {
+    float: right; width: 25px; height: 25px; margin-right: 1em;
+}
+div.appbar > img[left]  { 
+    float: left; width: 27px; height: 27px; margin-left: 0.8em;  margin-top: 0.2em;
+}
+div.appbar > img[left]:first-of-type {margin-left: 1em;}
+div.appbar > button {
+    margin-top: 0.4em; height: 1.8em;
+}
+div.appbar > button[right] {float: right; margin-right: 1em;}
+div.appbar > button[left] {float: left; margin-left: 1em;}
+div.appbar > button[right]:first-of-type {margin-right: 1.7em;}
+div[user-toolbox] {
+    position: absolute; top: 2.3em; right: 0.2em; border-radius: 0.4em; box-shadow: 0px 1px 2px 1px rgb(150,150,150);
+    width: 18em; height: calc(100% - 2.7em); background-color: rgb(240,240,240);
+}
+
+div[user-toolbox] > div[container] {
+    border-radius: inherit; position: relative; 
+    width: 100%; height: 100%; padding: 0px; margin: 0px;
+}
+
+div[user-toolbox] > div[container] > div[numpad-result] {
+    position: absolute; left: 1em; top: 1em; width: calc(100% - 2em);
+    background-color: rgb(244 , 244, 244); height: 2em; border:2px solid rgb(220, 220, 220);
+}
+
+div[user-toolbox] > div[container] > div[numpad-result] > font {
+    display: block; margin-top: 0.45em; margin-left: 0.3em;margin-right: 0.3em;
+    font-family:  Calibri,'Gill Sans MT','Gill Sans', 'Trebuchet MS', sans-serif;
+    color: rgb(40, 40, 40);
+ }
+
+div[user-toolbox] > div[container] > div[numpad] {
+    position: absolute; left: 0.1em; top: 3.5em; width: 98%; height: 80%!important;
+    text-align: center; overflow-y: auto; max-height: 98%important; overflow-y: auto;
+}
+
+div[user-toolbox] >div[container] > div[numpad] > font[key] { cursor: pointer;
+    display: inline-block; padding-top:1.45em; border-radius: 2em;
+    width: 4.5em!important; height: 2.3em!important; background-color: green;
+    margin-top: 0.5em;  background-color: rgb(230,230,230);
+}
+div[user-toolbox] > div[container] >div[numpad] > font[key]:hover {
+    box-shadow: 0px 0px 3px 2px rgb(210,210,210);
+}
+
+div[user-toolbox] > div[container] > div[numpad] > font[key]:active {
+    box-shadow: 0px 0px 3px 2px rgb(210,210,210);
+}
+
+
+
+
+
+
+
+div[products-area] {
+    position: absolute; top: 2.3em; left: 0.2em; border-radius: 0.4em; box-shadow: 0px 1px 2px 1px rgb(150,150,150);
+    width: calc(100% - 18em - 0.8em); height: calc(100% - 2.7em); background-color: rgb(240,240,240);
+    overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;
+}
+
+
+*[nice-scrollbar]::-webkit-scrollbar {
+	width: 10px; 
+}
+*[nice-scrollbar]::-webkit-scrollbar-track {
+	border-radius: 0.5em;
+	background-color: rgb(220,220,220);
+}
+*[nice-scrollbar]::-webkit-scrollbar-thumb {
+	background-color: rgb(190,190,190);
+	border-radius: 0.2em;
+}
+*[nice-scrollbar]::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(160,160,160);
+}
+
+div[table-container] {
+    width: 100%; overflow-y: auto; height: calc(100% - 2.4em);
+}
+
+div[table-container]::-webkit-scrollbar {
+	width: 10px; 
+}
+div[table-container]::-webkit-scrollbar-track {
+	border-radius: 0.5em;
+	background-color: rgb(220,220,220);
+}
+div[table-container]::-webkit-scrollbar-thumb {
+	background-color: rgb(190,190,190);
+	border-radius: 0.2em;
+}
+div[table-container]::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(160,160,160);
+}
+
+
+div[products-area] > div[topbar] {
+    width: 95%; height: 2em!important; max-height: 2em;
+    margin: 0 auto; margin-top: 0.3em;
+    border-collapse: collapse;
+}
+
+
+
+div[products-area] > div[topbar] > button {
+    height:100%; padding-right: 1em; padding-left: 1em;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 95%;
+    margin-top: 0.3em;
+    background-color: rgb(233, 233, 233);
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+table td,
+table th {
+    border: 1px solid #ddd;
+    padding: 8px;text-align: center;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #ddd;
+}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-weight: 800;
+    background-color:  rgb(190,190,190);
+    color: rgb(60, 60, 60);
+    font-size: 14pt;
+}
+table td {
+    font-size: 12pt;
+}
+
+
+
+
+
+
+/*********************************************************************
+                            user profile UI
+*********************************************************************/
+
+
+div[user-profile] {
+    position: fixed; z-index: 11; top: 2.4em; left: 1.0em; width: 10em;
+    background: rgb(240, 240, 240); height: 12.6em;
+    border-radius: 0.5em; box-shadow: 0px 0px 5px 1px rgb(140,140,140);
+    border:1px rgb(120, 120, 120) solid; padding-top: 0.6em;
+    padding-left: 0.2em; padding-right: 0.2em;
+}
+div[user-profile]:after {
+    position: absolute;
+    content: '';
+    top: -0.45em; background: rgb(240, 240, 240);
+    left: calc(calc(10em / 2) - 0.3em);border-top: 1px rgb(120, 120, 120) solid; border-left: 1px rgb(120, 120, 120) solid;
+    height: 0.8em; width:0.8em;
+    transform: rotate(45deg); z-index: 12;
+}
+
+div[user-profile] > .userID {
+    margin-top: 1em; text-align: center;
+    font-family: Ara_Aqeeq, 'Times New Roman', Times, serif;
+    font-size: 12pt; cursor: default;
+}
+
+div[user-profile] > .settingsOpt {
+    width: 95%; height: 2em; background-color: rgb(220, 220, 220);
+    border:1px solid rgb(100, 100, 100); border-radius: 0.3em;
+    text-align: right; direction: rtl; margin: 0 auto; cursor: pointer;
+    margin-bottom: 0.25em;
+}
+div[user-profile] > .settingsOpt:hover {background-color: rgb(200, 200, 200);}
+div[user-profile] > .settingsOpt > img { float: right;
+    width: 1.5em; height: 1.5em; margin-right: 0.5em; margin-top: 0.25em;
+}
+div[user-profile] > .settingsOpt > font { float: right;
+    font-family: sans-serif; margin-right: 0.5em;
+    font-size: 14pt; margin-top: 0.46em; 
+}
+
+
+
+
+
+
+
+
+
+/*********************************************************************
+                            speed access UI
+*********************************************************************/
+
+div[uncatogrized-items] {
+    position: fixed; z-index: 11;
+    top: 2.2em; left: calc(calc(100% / 2) - calc(20em / 2));
+    width: 20em; background: rgb(240, 240, 240);
+    height: 80%; border-radius: 0.5em;
+    box-shadow: 0px 0px 5px 1px rgb(140, 140, 140);
+    border: 1px rgb(120, 120, 120) solid;
+    
+}
+.topbar {
+    width: 97%; height: 2em;
+    text-align: right; direction: rtl; margin: 0 auto; cursor: default;
+}
+.topbar > img { cursor: pointer;
+    width: 1.3em; height: 1.3em;float: left;
+       margin-right: 0.5em; margin-top: 0.25em;
+}
+.topbar > font {
+    float: right;
+    font-family: sans-serif; margin-right: 0.5em;
+    font-size: 13pt; margin-top: 0.6em; font-weight: bold;
+}
+
+div[uncatogrized-items]  > .salt_list {
+    width: 99%; height: calc(100% - 2.7em); padding-top: 0.3em; overflow-y: auto;
+     text-align: right; direction: rtl;
+}
+div[uncatogrized-items]  > .salt_list > font { display: inline-flex;
+    width: auto; height: 1.5em; background-color: rgb(20, 119, 33);
+    margin-right: 0.2em; color: white; padding: 0.2em;padding-top: 0.3em;
+    border-radius: 0.3em; margin-right:0.2em; margin-bottom: 0.3em;
+    cursor: pointer;
+}
+div[uncatogrized-items]  > .salt_list > font:hover {background-color: rgb(41, 153, 56);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+div[user-dialog] {
+    position: fixed; z-index: 11;
+    top: 2.2em; left: calc(calc(100% / 2) - calc(20em / 2));
+    width: 20em; background: rgb(240, 240, 240);
+    height: 80%; border-radius: 0.5em;
+    box-shadow: 0px 0px 5px 1px rgb(140, 140, 140);
+    border: 1px rgb(120, 120, 120) solid;
+    
+}
+div[user-dialog] > div[input-container] {
+    width: 95%; margin: 0 auto;
+    margin-top: 0.5em; height: 1.5em!important;
+    max-height: 1.5em;
+}
+div[user-dialog] > div[input-container] > input {
+    float: left; width: 80%;
+    height: 89%; text-align: center;
+    border-radius: 0.3em;
+    border: 1px solid rgb(100, 100, 100);
+}
+div[user-dialog] > div[input-container]  > button {
+    float: right; width: 18%; 
+    background-color: rgb(56, 142, 60);
+    height: 100%; color: whitesmoke;
+}
+div[user-dialog] > div[content-container] {
+    margin: 0.3em auto;
+    width: 95%;
+    border-radius: 0.3em;
+    border: 1px solid rgb(220, 220, 220);
+    height: calc(100% - 4.8em);
+    overflow-y: auto;
+    cursor: pointer;
+}
+div[user-dialog] > div[content-container] > div {
+    position: relative;
+    font-size: 12pt; background-color: white;
+    height: 3em;
+    direction: rtl;
+    padding-top: 0.3em;
+    margin: 0px;
+}
+div[user-dialog] > div[content-container] > div:nth-child(even) {
+    background-color: rgb(235,235,235);
+}
+div[user-dialog] > div[content-container] > div:hover {
+    background-color: rgb(220,220,220);
+}
+
+div[user-dialog] > div[content-container] > div > font[code] {
+    position: absolute; right: 3em; top: 1em;
+    font-size: 13.5pt;font-weight: bold;
+}
+div[user-dialog] > div[content-container] > div > font[price] {
+    position: absolute; left: 1em; top: 0.5em;
+     font-size: 12pt;
+}
+div[user-dialog] > div[content-container] > div > font[date] {
+    position: absolute; left: 1em;
+    bottom: 0em; color: rgb(100, 100, 100);
+}
+div[user-dialog] > div[content-container] > div > img {
+    position: absolute; right: 0.6em; width: 2em; height: 2em;
+    top: 0.7em;
+    background-position: center;
+}
+
+
+
+
+
+
+
+
+
+div[info-dialog] {
+    position: fixed; z-index: 11; top: 2.4em; left: 3.12em; width: 10em;
+    background: rgb(240, 240, 240); height: 10.6em;
+    border-radius: 0.5em; box-shadow: 0px 0px 5px 1px rgb(140,140,140);
+    border:1px rgb(120, 120, 120) solid; padding-top: 0.6em;
+    padding-left: 0.2em; padding-right: 0.2em;
+}
+div[info-dialog]:after {
+    position: absolute;
+    content: '';
+    top: -0.45em; background: rgb(240, 240, 240);
+    left: calc(calc(10em / 2) - 0.3em);border-top: 1px rgb(120, 120, 120) solid; border-left: 1px rgb(120, 120, 120) solid;
+    height: 0.8em; width:0.8em;
+    transform: rotate(45deg); z-index: 12;
+}
+
+div[info-dialog] > font[company] {
+    font-size:20pt; display: block; width:100%;
+    text-align: center; font-family: AraAqeeq;
+}
+div[info-dialog] > font[describtion] {
+    display: block; width:100%; font-size: 14pt; margin-top: 1em;
+    text-align: center; font-family: 'Times New Roman', Times, serif;
+}
+
+div[info-dialog] > font[thanks] {
+    display: block; width:100%; font-size: 15pt; text-align: center; margin-top: 1em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

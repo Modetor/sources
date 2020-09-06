@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+	<html lang="ar">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>واجهة المستخدم</title>
+
+		<script>if (sessionStorage.getItem('fn') == undefined || sessionStorage.getItem('id') == undefined || sessionStorage.getItem('sid') == undefined) { location.href = 'http://'+location.host+'/site'; }</script>
+
+		<link rel="stylesheet" href="css/clientui.css">
+		<link rel="stylesheet" type="text/css" href="/../shared/css/swal.css">
+		<link rel="stylesheet" href="/../shared/css/font.css">
+		<link rel="stylesheet" href="/../shared/css/buttons.css">
+
+		<script src="/../shared/js/q.js"></script>
+		<script src="js/errors.js"></script>
+		<script type="text/javascript" src="/../shared/js/swal.js"></script>
+	</head>
+
+	<body>
+		<div class='appbar'>
+			<font style="cursor: pointer" author title="#Modern_Creator">Modetor</font>
+			<input tabindex="0" onfocusout="refocus()" type="text" product-code-field>
+
+			
+			<img right src="res/clear_shopping_cart_48px.png" onclick="ClearCart()">
+			<img right src="res/delete_forever_48px.png" onclick="PopItem()">
+			<img right src="res/calculator_48px.png" onclick="window.open('calculator:///');">
+
+			<button right onclick="ShowSearchByNamePanel();" class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+					<img src="res/search_in_list_48px.png" style=" float:right;width:22px; margin-right: -0.1em;">
+					<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">بحث عن منتج</b>
+			</button>
+			<button right onclick="ShowSpeedAccessPanel();" class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+						<img src="res/table_of_content_48px.png" style=" float:right;width:22px; margin-right: -0.1em;">
+						<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">الوصول السريع</b>
+			</button>
+			<button right onclick="ShowRestoreBillPanel();" class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+						<img src="res/bill_48px.png" style=" float:right;width:22px; margin-right: -0.1em;">
+						<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">إسترداد فاتورة</b>
+			</button>
+
+
+			<img onclick="ShowHideUserProfile();" id="USER_ICON" left src="res/circled_user_male_skin_type_6_48px.png">
+			<img left src="res/info_48px.png" onclick="ShowHideInfoDialog();">
+		</div>
+
+		<div nice-scrollbar user-toolbox>
+			<div container>
+				<div numpad-result>
+					<font></font>
+				</div>
+
+				<div nice-scrollbar numpad>
+					<font del key
+						style="background-image: url(res/delete_sign_48px.png); background-color:#ffcdd2; background-position: center; background-repeat: no-repeat; background-size: 35px 35px;">
+					</font>
+					<font dot key
+						style="background-image: url(res/dot.png); background-position: center; background-repeat: no-repeat; background-size: 25px 25px;">
+					</font>
+					<font title="performs calculation" done key
+						style="background-image: url(res/done_96px.png); background-color:#c8e6c9; background-position: center; background-repeat: no-repeat; background-size: 35px 35px;">
+					</font>
+
+					<font key>1</font>
+					<font key>2</font>
+					<font key>3</font>
+					<font key>4</font>
+					<font key>5</font>
+					<font key>6</font>
+					<font key>7</font>
+					<font key>8</font>
+					<font key>9</font>
+					<font key>0</font>
+
+				</div>
+			</div>
+			
+			
+
+		</div>
+
+
+		<div nice-scrollbar products-area>
+			<div dir="rtl" topbar>
+				<button user-interactive-savebill-button onclick="SaveTheBill();" hidden class="green">
+					<img src="res/save_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">حفظ</b>
+				</button>
+				<button user-interactive-cancel-editbill-button onclick="CancelEditBill();" hidden style="margin-right:0.0em;" class="red">
+					<img src="res/delete_sign_white_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">إلغاء</b>
+				</button>
+				
+				
+				<button user-interactive-cash-button onclick="RegisterTheBill('cash')" class="green">
+					<img src="res/cash_in_hand_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">دفع نقدي</b>
+				</button>
+				<button user-interactive-creditcard-button onclick="RegisterTheBill('credit-card')" class="green">
+					<img src="res/card_in_use_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">دفع بالبطاقة</b>
+				</button>
+				<button user-interactive-sadad-button onclick="RegisterTheBill('sadad')" class="green">
+					<img src="res/online_money_transfer_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">دفع بالسداد</b>
+				</button>
+				<button hidden user-interactive-cancel-button onclick="ClearCart();" style="margin-right:0.0em;" class="red">
+					<img src="res/delete_sign_white_48px.png" style=" float:right;width:30px; margin-right: -0.2em;">
+					<b style="float: right; margin-top: 0.45em; margin-right: 0.5em;">إلغاء</b>
+				</button>
+				<font hidden id="TOTAL_PRICE_FONT" style="float:left; background-color: rgb(225,225,225); height: 100%!important; text-align: center; padding-top: 0.45em; padding-right: 0.3em; padding-left: 0.3em; box-sizing: border-box;
+				border-radius: 0.3em; direction: rtl;">total price : 0</font>
+			</div>
+			<div table-container>
+				<table product-list hidden dir="rtl">
+					<tr>
+						<th style="width:20px;">.</th>
+						<th>#</th>
+						<th>إسم الصنف</th>
+						<th>الكمية</th>
+						<th>السعر</th>
+						<th>الإجمالي</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<style>
+			
+		</style>
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!------------------
+		  --HIDDEN CONTENT--
+		  ------------------>
+		<div hidden user-profile>
+			<center><img src="res/guest_male_127px.png" alt="user icon" width="100px" height="100px"
+					style=" border-radius: 50%; padding: 0.25em; border: 2px solid rgb(100, 100, 100); background-color: rgb(220, 220, 220);">
+			</center>
+			<h5 class="userID"></h5>
+
+			<div class="settingsOpt">
+				<img src="res/settings_48px.png" alt="gear">
+				<font>الإعدادات</font>
+			</div>
+			<div class="settingsOpt" onclick="Logout();">
+				<img src="res/shutdown_48px.png" alt="gear">
+				<font>تسجيل الخروج</font>
+			</div>
+		</div>
+
+		<div hidden uncatogrized-items>
+			<div class="topbar">
+				<img onclick="HideSpeedAccessPanel();" src="res/delete_sign_48px.png" alt="close" title="close">
+				<font>قائمة الوصول السريع</font>
+			</div>
+			<div nice-scrollbar  class="salt_list">		
+			</div>
+		</div>
+
+		<div hidden restore-bill user-dialog>
+			<div class="topbar">
+				<img onclick="HideRestoreBillPanel();" src="res/delete_sign_48px.png" alt="close" title="close">
+				<font>قائمة أسترداد فاتورة</font>
+			</div>
+			
+			<div input-container>
+				<input type="text" placeholder="رمز الفاتورة" />
+				<button onclick="SearchForBillByCode();">بحث</button>
+			</div>
+
+			<div nice-scrollbar content-container>
+			</div>
+		</div>
+
+		<div hidden info-dialog>
+			<font company>موديتور</font>
+			<div style="margin-top:0.5em;height:0.02em; background-color:rgb(100,100,100);"></div>
+			<font describtion>
+				لتطوير برمجيات مكتبية وتجارية لجميع المجالات
+			</font>
+			<font describtion style="font-size:13pt;">المبيعات في جلسة العمل : 15</font>
+			<font thanks>حقوق النسخ و إعادة التوزيع لجميع الأيقونات المستخدمة تعود لـ
+				<br/>
+				https://icon8.com
+			</font>
+		</div>
+
+		<div hidden search-by-name user-dialog>
+			<div class="topbar">
+				<img onclick="HideSearchForProductByNamePanel();" src="res/delete_sign_48px.png" alt="close" title="close">
+				<font>البحث بإسم المنتج</font>
+			</div>
+			
+			<div input-container>
+				<input type="text" placeholder="إسم المنتج" />
+				<button onclick="SearchForProductByName();">بحث</button>
+			</div>
+
+			<div nice-scrollbar content-container>
+			</div>
+		</div>
+
+		<script src="js/clientui.js"></script>
+		<script>
+
+	
+		</script>
+	</body>
+
+	</html>

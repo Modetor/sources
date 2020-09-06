@@ -1,0 +1,8 @@
+scope.ServerIP = Server.IP;
+scope.ServerAddress = Server.Address;
+scope.ServerFullAddress = Server.FullAddress;
+scope.ServerResult = "Server has nothing to say";
+scope.ClientAddress = client.Client.RemoteEndPoint.ToString();
+string connStr = "server=localhost;user=root;database=db_test;port=3306;password=Mqlprovider_0";
+scope.MySqlConnection = typeof(MySqlConnection);
+scope.MySqlCommand = typeof(MySqlCommand);

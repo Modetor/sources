@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    
+    <link rel="stylesheet" type="text/css" href="css/chat-layout.css">
+    <style>
+        @keyframes msg_added {
+            0%, 20%{opacity: 0.3;}
+            100% {opacity: 1;}
+        }
+        div.message_card {
+            height: auto;
+            max-width: 75%;
+            box-shadow: 0px 1px 4px 1px rgb(100, 100, 100);
+            padding: 0.3em;
+            border-radius: 0.3em;
+            margin: 0.5em;
+            clear: both;
+            
+        }
+        div.message_card[him] {float: left; border-top-left-radius: 0px;}
+        div.message_card[i] {float: right; border-top-right-radius: 0px;}
+    </style>
+</head>
+<body>
+    <div chatlist>
+        <img class="friend_tap" src="res/temp/f1.jpg" alt="Profile Image">
+        <img message_sent class="friend_tap" src="res/profile_img.jpg" alt="Profile Image">
+        <img message_delivered class="friend_tap" src="res/cover_img.jpg" alt="Profile Image">
+        <img message_seen class="friend_tap" src="res/temp/f2.jpg" alt="Profile Image">
+        <img message_arrived class="friend_tap" src="res/temp/f3.png" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f4.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f5.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f6.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f7.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f8.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f9.jpg" alt="Profile Image">
+        <img class="friend_tap" src="res/temp/f10.jpg" alt="Profile Image">
+    </div>
+    <div chatheader>header</div>
+
+        <div messages-list-container>
+                <div class="message_card" him>Hi there!</div>
+                <div class="message_card" i>Hola!</div>
+        </div>
+        <div messageinput-bar>
+            
+        </div>
+
+        <script>
+            var him_or_i = false;  // flipflop variable,  false: him, true: i
+            var msg_counter = 0; // iterate over messages(array)
+            let msglist = document.querySelector('div[messages-list-container]');
+            var messages = [
+                                    'Hey buddy', 'Hi there!', 'how u doin ?', 'fine, you ?', "i'm struggling now", 'why ?',
+                                    'the motherfucking project is taking so long to be done', 'hmmm, im sure you need a third hand rite?', 'yeah why not!', 'ok, wait a sec', 'take a men'
+                               ];
+            var iv = setInterval(() => {
+                if(msg_counter >= messages.length) msg_counter = 0;
+
+                msglist.innerHTML += 
+                    '<div class="message_card" '+ (him_or_i ? 'i' : 'him') +'>'+messages[msg_counter]+'</div>';
+                    msg_counter++;
+                    him_or_i = !him_or_i;
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(iv);
+            }, 25000);
+        </script>
+
+</body>
+</html>

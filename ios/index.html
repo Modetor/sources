@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <script type="text/javascript" src="../shared/swal.js"></script>
+	    <script type="text/javascript" src="../shared/q.tooltip.js"></script>
+	    <link rel="stylesheet" type="text/css" href="../shared/swal.css">
+	    <script type="text/javascript" src="../shared/q.js"></script>
+	    <link rel="stylesheet" type="text/css" href="../shared/q.css">
+	    <link rel="stylesheet" type="text/css" href="../shared/q.tooltip.css">
+        <link rel="stylesheet" type="text/css" href="../shared/q.menu.css">
+        <link rel="stylesheet" type="text/css" href="ios/device.css">
+        
+    </head>
+
+    <body>
+        <div class="device">
+            <div class="screen" style="background: url(ios/bg.jpg); background-origin: content-box;
+            background-position: center;">
+            </div>
+        </div>
+
+
+
+        <div style="position: fixed; top: 100px; right: 250px;">
+            <button device-type="backbutton" style="padding: 2em; box-shadow: #dbdbdb 0px 0px 2px 2px; border: none; border-radius: 1em; background:  #03A9F4
+">back</button>
+        </div>
+
+        
+<script type="text/javascript" src="ios/system/core/predefined.js" ></script>
+<script type="text/javascript" src="ios/system/core/holder.js"></script>
+<script type="text/javascript" src="ios/system/core/looper.js"></script>
+<script type="text/javascript" src="ios/system/core/app.js"></script>
+<script type="text/javascript" src="ios/system/core/boot/start.js"></script>
+
+<!--
+
+    MAIN PROCESS GOES HERE...
+
+ -->
+<script type="text/javascript">
+
+    boot(); // boots the system...
+
+    looper.prepare(); // prepare the looper
+    looper.Loop() // start system interuption processes
+
+</script>
+
+    </body>
+
+
+
+</html>

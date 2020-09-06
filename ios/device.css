@@ -1,0 +1,64 @@
+div.device {
+    width: 1300px;
+    height: 800px;
+    background: #000;
+    border-radius: 2em;
+    box-shadow: #454545 0px 0px 12px 6px;
+    margin: auto auto;
+    margin-top: 1em;
+}
+
+div.device > .screen {
+    position: relative;
+    left: 2.5%;
+    top: 2.5%;
+    bottom: 5%;
+    width: 95%;
+    height: 95%;
+    background: #252525;
+    border-radius: 0.4em;
+}
+
+div.device > .screen > .mainview {
+    position: inherit;
+    background: #f9f9f9;
+    max-height: inherit;
+    max-width: inherit;
+    width: 100%; height: 100%;
+    border-radius: 0.35em;
+}
+div.device > .screen > .mainview[transparent='true'] {
+    background: transparent;
+}
+div.device > .screen > .mainview[anim="base"] {
+    animation: base 0.2s 1 ease-in-out;
+}
+div.device > .screen > .mainview[anim="slide"] {
+    animation: slide 0.2s 1 ease-in-out;
+}
+
+div.device > .screen > .mainview[anim="fadeout"] {
+    animation: fadeout 0.2s 1 ease-in-out;
+}
+
+div.device > .screen > .mainview  > * {
+    max-height: inherit;
+    max-width: inherit;
+}
+
+
+@keyframes base {
+    from { transform: scale(0.5) translateY(20%); opacity: 0.3; border-radius: 40%;}
+    to {transform: scale(1) translateY(0%); opacity: 1;border-radius: inherit;}
+}
+
+
+@keyframes slide {
+    from { transform: rotate(90deg);border-radius: 40%; opacity: 0.2;}/*translateX(-60%); opacity: 0.2;*/
+    to {}
+}
+
+@keyframes fadeout {
+    from {opacity: 0.2;}/*translateX(-60%); opacity: 0.2;*/
+    to {opacity: 1;}
+}

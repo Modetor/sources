@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <title>Egg Business</title>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	    <script type="text/javascript" src="../shared/swal.js"></script>
+	    <script type="text/javascript" src="../shared/q.tooltip.js"></script>
+	    <link rel="stylesheet" type="text/css" href="../shared/swal.css">
+	    <script type="text/javascript" src="../shared/q.js"></script>
+	    <link rel="stylesheet" type="text/css" href="../shared/q.css">
+	    <link rel="stylesheet" type="text/css" href="../shared/q.tooltip.css">
+	    <link rel="stylesheet" type="text/css" href="../shared/q.menu.css">
+		<script type="text/javascript" src="../shared/q.alert.css"></script>
+
+		<style type="text/css">
+			Box[element-type="Alert"] {
+				box-shadow: #090909 0px 0px 10px 0.5px;
+				padding: 1em;
+				position: fixed;
+				top: 30%;
+				left: 30%;
+				width: 40%;
+				border-radius: 1em;
+				background-color: #f9f9f9;
+				border: solid 0.12em  #0091EA;
+				max-width: 35em;
+				animation: yyy .2s;
+				z-index: 1000;
+			}
+			Box[element-type="Alert"] > hr {
+				
+				margin:0px; 
+				width: 100%;
+				height: 0px;
+				padding-right: 1.9em;
+				margin-left: -1em;
+				color:  #eee;
+				opacity: 0.7;
+			}
+
+
+			@keyframes xxx {
+				from {transform: translateY(300%); opacity: 0.3;}
+				to {transform: translateY(0%); opacity: 1;}
+			}
+			@keyframes yyy {
+				from {transform: scale3d(0.5, 0.5,1.5); opacity: 0.3;}
+				to {transform: scale3d(1,1.2); opacity: 1;}
+			}
+
+			div[element-type="blackscreen"] {
+				background: #000;
+				opacity: 0.7;
+				z-index: 999;
+				position: fixed; top: 0px;
+				left: 0px; width: 100%;
+				height: 100%;
+			}
+			#b {
+				width: 100%;
+				background: red;
+				display: inline-block;
+				align-content: center;
+			}
+		</style>
+
+		<style type="text/css">
+			ActionBar {
+				position: fixed;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 2.5em;
+				::webkit-scroll-width: 0px;
+				background: #0055ee;
+				box-shadow: 0px 1px 3px 2px #888;
+				display: inline-block;
+			}
+			ActionBar > NavigationDrawer {
+				position: absolute;
+				top: 0.27em;
+				left: 1em;
+				background-color: #0091ea;
+				border-radius: 50%;
+				width: 2em;
+				height: 2em;
+				box-shadow: 0px 0px 1px 2px #0011ea;
+			}
+			ActionBar > Name {
+				
+				color: #454545;
+				font-size: 20pt;
+				position: absolute;
+				top: 0.6em; left: 3.7em;
+			}
+			ActionBar > MenuArea {
+				float: right;
+				display: inline-block;
+				margin-left: 0.5em;
+				margin-right: 0.5em;
+				height: 100%;
+				width: 40%;
+			}
+			ActionBar > MenuArea > * {margin-top: 0.3em;} 
+		</style>
+
+		<style type="text/css">
+			div.MainScreen {
+				position: relative;
+				margin-top: 4em;
+				width: 400px;
+				margin: 0 auto;
+				height: 400px;
+				background: green;
+				box-shadow: 0px 0px 3px 4px #999;
+				border-radius: 0.5em;
+			}
+
+			div.MainScreen > div.Fragment {
+				position: relative;
+				top: 0px; left: 0px;
+				width: 400px!important;
+				height: 400px;
+				z-index: 0;
+			}
+			div[View] {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 400px;
+				border-radius: 0.55em;
+			}
+			div[View] > * {
+				margin-top: 0.2em;
+				margin-left: 0.2em;
+			}
+			div.MainScreen > button[Control] {
+				position: absolute;
+				top: 47%;
+				z-index: 2;
+				border: 0px;
+				border-radius:  50%;
+				box-shadow: 0px 0px  2px 2px #0091ea;
+				padding: 0.5em;
+				font-size: 16pt;
+				width: 2em; height: 2em;
+			}
+			button[Control][Next] {
+				right: 0.5em;
+			}
+			button[Control][back] {
+				left: 0.5em;			
+			}
+
+			@keyframes hide {
+				from {opacity: 0.8;}
+				to{border-radius: 50%; opacity: 0.3; transform: scale(0);}
+			}
+		</style>
+	</head>
+
+	<body>
+		<ActionBar label="ActionBar" style="background: #e9e9e9;">
+			<Name><b>Modetor</b></Name>
+			<NavigationDrawer alt="Nav"></NavigationDrawer>
+			<MenuArea>
+				
+			</MenuArea>
+		</ActionBar>
+		<br /><br /><br />
+		<div class="MainScreen">
+			<div class="Fragment" tabindex="0">
+				<div View style="background: yellow; height: 400px;">
+					<b>View 1</b>
+				</div>
+				<div View style="background: red;height: 400px;">
+					<b>View 2</b>
+				</div>
+			</div>	
+
+			<button Control Back id="back"><</button>
+			<button Control Next id="next">></button>
+		</div>
+
+
+
+
+		<script type="text/javascript">
+			var index = 0;
+			var next = q("#next"),
+				back = q("#back");
+			let views = qlist("div[View]");
+
+				next.do("click", (e) => {
+					index++;
+
+					
+
+					if(index < 0) index  = views.Length;
+					else if(index > views.Length) index = 0;
+
+					console.log(index);
+				});
+				back.do("click", (e) => {
+					index--
+
+					
+
+					if(index < 0) index  = views.Length;
+					else if(index > views.Length) index = 0;
+
+					views.Get(index).css("animation: hide 0.2s");
+				});
+
+		</script>
+    </body>
+</html>

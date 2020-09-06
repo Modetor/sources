@@ -1,0 +1,22 @@
+@charset "utf8";
+@import "../../shared/css/font.css";
+div[ActionBar], div[LeftSide], div[RightSide] {overflow: hidden;}
+div[ActionBar] {
+    position: fixed; top: 0.5%;  width: calc(100% - 0.5em); left: 0.25em;
+    background-color: #01579b; z-index: 20; height: 1.7em;
+    box-shadow: 0px 0px 4px 2px rgb(220,220,220);
+    border-radius: 0.2em;
+}
+
+div[LeftSide] {
+    position: fixed; top: calc(0.5% + 1.8em);  width: calc(100% - 0.5em); left: 0.25em;
+    background-color: #01579b; height: calc(100% - 1% - 1.9em);
+    box-shadow: 0px 0px 4px 2px rgb(220,220,220);
+    border-radius: 0.2em; width: 70%;
+}
+div[RightSide] {
+    position: fixed; top: calc(0.5% + 1.8em);  width: calc(100% - 0.5em); right: 0.25em;
+    background-color: #01579b; height: calc(100% - 1% - 1.9em);
+    box-shadow: 0px 0px 4px 2px rgb(220,220,220);
+    border-radius: 0.2em; width: 29%;
+}

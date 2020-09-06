@@ -1,0 +1,79 @@
+@font-face {
+  font-family: RobotoNormal;
+  src: url(../fonts/roboto/Roboto-Medium.ttf) format('truetype');
+  font-weight: normal;
+  font-style: bold;
+}
+@font-face {
+  font-family: RobotoBold;
+  src: url(../fonts/roboto/Roboto-Bold.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: AraAqeeq;
+  src: url(../fonts/ara_bold.otf) format('truetype');
+  font-weight: normal;
+  font-style: bold;
+}
+@font-face {
+  font-family: SFRB;
+  src: url(../fonts/SFPro/SF-Pro-Rounded-Bold.ttf) format('truetype');
+  font-weight: normal;
+  font-style: bold;
+}
+
+@font-face {
+  font-family: SFDB;
+  src: url(../fonts/SFPro/SFProDisplay-Bold.ttf) format('truetype');
+  font-weight: normal;
+  font-style: bold;
+}
+@font-face {
+  font-family: NUNITO_REGULAR;
+  src: url(../fonts/nunito/Nunito-Regular.ttf) format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: NUNITO_BOLD;
+  src: url(../fonts/nunito/Nunito-Bold.ttf) format('truetype');
+  font-weight: normal;
+  font-style: bold;
+}
+@font-face {
+  font-family: NUNITO_LIGHT;
+  src: url(../fonts/nunito/Nunito-Light.ttf) format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: AMIRI_BOLD;
+  src: url(../fonts/amiri/Amiri-Bold.otf);
+}
+@font-face {
+  font-family: AMIRI;
+  src: url(../fonts/amiri/Amiri-Regular.otf);
+}
+@font-face {
+  font-family: AMIRI_BOLDS;
+  src: url(../fonts/amiri/Amiri-BoldSlanted.otf);
+}
+@font-face {
+  font-family: AMIRI_QURAN;
+  src: url(../fonts/amiri/AmiriQuran.otf);
+}
+@font-face {
+  font-family: AMIRI_COLOREDQURAN;
+  src: url(../fonts/amiri/AmiriQuranColored.otf);
+}
+
+@font-face {
+  font-family: DROID_NASK;
+  src: url(../fonts/DroidNask/DroidNaskh-Regular.ttf);
+}
+
+@font-face {
+  font-family: DROID_NASK_BOLD;
+  src: url(../fonts/DroidNask/DroidNaskh-Bold.ttf);
+}
+

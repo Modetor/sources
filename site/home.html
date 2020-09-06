@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#497495">
+	<meta property="og:title" content="Modetor - Libyan society messenger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--<script>
+            if(sessionStorage.getItem('sid') != undefined)  location.href = 'portal.html';
+        </script>-->
+	<link rel="stylesheet" type="text/css" href="/../shared/css/swal.css">
+    <link rel="stylesheet" type="text/css" href="/../shared/css/font.css">
+    <link rel="stylesheet" href="css/home.css">
+
+	<script type="text/javascript" src="/../shared/js/q.js"></script>
+	<script type="text/javascript" src="/../shared/css/q.alert.css"></script>
+	<script type="text/javascript" src="/../shared/js/swal.js"></script>
+    <title>App[0] 12/5/2020 1:39 PM</title>
+</head>
+<body>
+    
+    <div class="loginPanel"><br />
+        <h3>Login</h3>
+        <br /><br />
+        <form>
+            <input class="loginInput" id="username_input" type="text" placeholder="Username" />
+            <input class="loginInput" id="password_input" type="password" placeholder="password" />
+            <button class="loginButton" onclick="LoginNow(); return false;">CONTINUE</button>
+        </form>
+    </div>
+
+
+</body>
+<script type="text/javascript">
+    //if()
+    function LoginNow() {
+        let username = q("#username_input").Value();
+        let password = q("#password_input").Value();
+        q.Ajax.Post('backend/login.php', {u : username, p : password}, (r) => {
+            console.log(r);
+            if(r[0] == '0') 
+                swal.fire({type: 'error', text: r.substring(1)});
+            else {
+                let userInfo = JSON.parse(r);
+                sessionStorage.setItem('id', userInfo.id);
+                sessionStorage.setItem('fn', userInfo.fullname);
+                sessionStorage.setItem('pm', userInfo.permission);
+                sessionStorage.setItem('sid', userInfo.sid);
+                sessionStorage.setItem('expd', userInfo.expd);
+                location.href = userInfo.upl;
+            }
+               
+        });
+        //
+    }
+
+</script>
+</html>

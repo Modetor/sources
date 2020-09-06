@@ -1,0 +1,206 @@
+div.innerWindow {
+	position: relative;
+	width: 50%;
+	height: 20em;
+	border-radius: 0.3em;
+	background-color: rgb(220,220,220);
+	box-shadow: 0px 0px 5px 3px rgb(90,60,90);
+}
+
+div.innerWindow > h5[title] {
+
+	background-color: rgb(200,200,200);
+	font-family: RobotoBold;
+	width: 100%; height: 2em; 
+	color: rgb(40,40,40);
+	text-align: center;
+	padding-top: 1em;
+	border-top-right-radius: inherit;
+	border-top-left-radius:  inherit;
+	user-select: none;
+}
+
+div.innerWindow > p {
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 15pt;
+	margin-top: 2em; user-select: none;
+}
+
+
+div.innerWindow > div[container] {
+	width: 95%;
+	height: 60%;
+	margin-top: 1em;
+	display: flex;
+}
+div.innerWindow > div[container] > div[layout_width="none"]  {
+	display: none;
+
+}
+div.innerWindow > div[container] > div[layout_width="balance"] {
+	width: 50%;
+
+}
+div.innerWindow > div[container] > div[layout_width="fill"] {
+	width: 100%;
+	animation: SlideRight 0.18s ease-out;
+}
+div.innerWindow > * {margin: 0 auto; }
+
+@media only screen and (max-width: 750px) {
+	div.innerWindow {width: 85%; left: 7.5%;margin-top: 10%; }
+	div.innerWindow > h5[title] { font-size: 14pt; }
+}
+
+@media only screen and (min-width: 750px) {
+	div.innerWindow {width: 60%;left: 20%;margin-top: 5%;}
+}
+@media only screen and (min-height: 700px) {
+	div.innerWindow { height: 26em; margin-top: 5%;}
+}
+@media only screen and (max-height: 699px) {
+	div.innerWindow > div[container] { height: 45%;}
+}
+	
+
+/**************************************************
+
+		General layout styles
+
+***************************************************/
+*[align-center] {display: block; text-align: -webkit-center;}
+* { outline:  none; }
+
+/**************************************************
+
+		Border styles
+
+***************************************************/
+
+
+*[border-radius="none"] {border-radius: 0em;}
+*[border-radius="smaller"] {border-radius: 0.25em;}
+*[border-radius="small"] {border-radius: 0.35em;}
+
+*[border-style="solid"] {border-style: solid;}
+*[border-style="ridge"] {border-style: ridge;}
+*[border-style="dashed"] {border-style: dashed;}
+*[border-style="dotted"] {border-style: dotted;}
+*[border-style="double"] {border-style: double;}
+*[border-style="none"] {border-style: none;}
+
+*[border-width="smaller"] {border-width: 0.05em;}
+*[border-width="small"] {border-width: 0.1em;}
+*[border-style="medium"] {border-width: 0.19em;}
+*[border-style="large"] {border-width: 0.5em;}
+
+
+
+
+
+::-webkit-scrollbar {
+	width: 10px; 
+}
+::-webkit-scrollbar-track {
+	border-radius: 0.5em;
+	background-color: rgb(190,190,190);
+}
+::-webkit-scrollbar-thumb {
+	background-color: rgb(170,170,170);
+	border-radius: 0.5em;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(150,150,150);
+}
+/**************************************************
+
+		Input area v1 styles
+
+***************************************************/
+
+div[input-area="v1"] {
+	position: relative;
+	border-color: rgb(120,120,120); background-color: rgb(240,240,240);
+	width: 80%;
+	height: 1.5em;
+	border-style: solid; border-width: 0.06em; border-radius: 0.35em; 
+	margin-top: 0.5em;
+}
+div[input-area="v1"] > font {
+	font-size: 12pt;
+	font-family: SFDB;
+	position: absolute;
+	top: 0.4em;
+	margin-top: 0.3em;
+	left: 0.45em;
+	text-align: center;
+}
+div[input-area="v1"] > input {
+	position: absolute;
+	right: 0.3em;
+	top: 0.3em;
+	bottom: 0.3em;
+	width: 65%;
+	border-radius: 0.3em;
+	border-style: solid; border-width: 0.1em;
+	text-align: center;
+	font-family: RobotoNormal;
+}
+
+
+@media only screen and (max-width: 1000px) {
+	div[input-area="v1"] {width: 80%;}
+	div[input-area="v1"] > font {font-size: 10pt; top: 0.5em;}
+}
+
+@media only screen and (min-width: 1000px) {
+	div[input-area="v1"] {width: 65%;}
+	div[input-area="v1"] > font {
+	font-size: 11pt; }
+}
+
+/**************************************************
+
+		Input area v1.1 styles
+
+***************************************************/
+
+div[input-area="v1.1"] {
+	position: relative;
+	border-color: rgb(120,120,120); background-color: rgb(240,240,240);
+	width: 80%;
+	height: 1.5em;
+	border-style: solid; border-width: 0.06em; border-radius: 0.35em; 
+	margin-top: 0.5em;
+}
+
+div[input-area="v1.1"] > input {
+	position: absolute;
+	left: 0.2em;
+	top: 0.2em;
+	bottom: 0.2em;
+	width: 70%;
+	border-top-left-radius: 0.4em;
+	border-bottom-left-radius: 0.4em;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-style: solid; border-width: 0.1em;
+	text-align: center;
+	font-family: RobotoNormal;
+}
+
+div[input-area="v1.1"] > button {
+	font-size: 12pt;
+	font-family: SFDB;
+	position: absolute;
+	width: 26%;
+	top: 0.15em;
+	bottom: 0.17em;
+	right: 0.2em;
+	border-top-left-radius: 0em;
+	border-bottom-left-radius: 0em;
+	border-top-right-radius: 0.4em;
+	border-bottom-right-radius: 0.4em;
+	border-style: solid; border-width: 0.08em;
+}

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+
+	<link rel="stylesheet" href="css/adminui.css">
+	<link rel="stylesheet" type="text/css" href="/../shared/css/swal.css">
+	<link rel="stylesheet" href="/../shared/css/font.css">
+	<link rel="stylesheet" href="/../shared/css/buttons.css">
+
+	<script src="js/errors.js"></script>
+	<script src="/../shared/js/q.js"></script>
+	<script type="text/javascript" src="/../shared/js/swal.js"></script>
+	<script>
+		if(sessionStorage.getItem('sid') == undefined) location.href = 'http://'+location.host+'/site/home.html';
+		/*q.Ajax.Get('backend/valid_session.php?sid='+sessionStorage.getItem('sid'), v => {
+			if(v[0] == '0') {
+				sessionStorage.clear();
+				history.back();
+				//swal.fire(v.substring(1));
+			} //else alert(v);
+		});*/
+	</script>
+</head>
+<body>
+	<div class="appbar">
+		<font title="#Modern_Creator" author>Modetor</font>
+
+		<img user-icon left src="res/circled_user_male_skin_type_6_48px.png" alt="">
+		<img info-icon left src="res/info_48px.png">
+
+		<button right employee-button class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+			<img src="res/users.png" style=" float:right;width:22px; margin-right: -0.1em;">
+			<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">الموظفين</b>
+		</button>
+		<button right onclick="window.open('calculator:///');" class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+			<img src="res/calculator_50px.png" style=" float:right;width:22px; margin-right: -0.1em;">
+			<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">الألة الحاسبة</b>
+		</button>
+		<button right notes-button class="blue big-radius" style="padding-right:1em; padding-left:1em;">
+			<img src="res/brainstorm_skill_48px.png" style=" float:right;width:22px; margin-right: -0.1em;">
+			<b style="float: right; margin-top: 0.15em; margin-right: 0.4em;">الملاحظات</b>
+		</button>
+		
+	</div>
+
+	<div nice-scrollbar toolbox>
+		<div container>
+				
+				<div register-product tool>
+					<img src="res/add_property_127px.png" alt="add product" title="إضافة منتج">
+					<font>تسجيل منتج </font>
+				</div>
+				<div add-account tool>
+						<img src="res/add_user_male_127px.png" alt="add client" title="إضافة منتج">
+						<font>إنشاء حساب </font>
+				</div>
+				<div tool onclick="ShowEmployeeDialog();">
+						<img src="res/remove_user_male_127px.png" alt="add product" title="إضافة منتج">
+						<font>حذف حساب</font>
+				</div>
+				<div view-payment-bills tool>
+						<img src="res/general_ledger_127px.png" alt="add product" title="إضافة منتج">
+						<font>فواتير المبيعات</font>
+				</div>
+				<div tool>
+						<img src="res/add_book_127px.png" alt="add product" title="إضافة منتج">
+						<font>إنشاء فاتورة موردين</font>
+				</div>
+				<div tool>
+						<img src="res/general_ledger_127px.png" alt="add product" title="إضافة منتج">
+						<font>فواتير الموردين</font>
+				</div>
+				
+				<div tool  onclick="ShowSuppliersScreen();">
+						<img src="res/vendors_bills.png" alt="add product" title="إضافة منتج">
+						<font>سجل الموردين</font>
+				</div>
+				<div  tool>
+						<img src="res/budget_127px.png" alt="add product" title="إضافة منتج">
+						<font>صرف المرتبات</font>
+				</div>
+				<div  tool>
+						<img src="res/hangar_127px.png" alt="add product" title="إضافة منتج">
+						<font>المستودع</font>
+				</div>
+		</div>
+		
+	</div>
+	<div nice-scrollbar toolbox left>
+		
+	</div>
+	<div nice-scrollbar middle-area>
+		
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!------------------
+		  --HIDDEN CONTENT--
+	------------------>
+	<div add-supplier user-dialog nice-shadow='0' style="z-index:51;height:15em">
+		<div class="topbar">
+			<img onclick="HideAddSupplierDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+			<font>إضافة حساب مستخدم</font>
+		</div>
+		
+		<div nice-scrollbar full-content-container>
+			<div input-banner>
+				<font>الإسم و اللقب</font>
+				<input maxlength="35" type="text" ans-input>
+			</div>
+			<div note-banner>
+				<font>يمكن إضافة أكثر من رقم بإضافة فاصلة بين كل رقم</font>
+			</div>
+			<div input-banner>
+				<font>رقم الهاتف</font>
+				<input type="text" ans-input>
+			</div>
+			<div input-banner>
+					<font>مكان الإقامة</font>
+					<input type="text" ans-input>
+			</div>
+			<div input-banner>
+					<font>مكان العمل</font>
+					<input maxlength="30" type="text" ans-input>
+			</div>
+			<div input-banner>
+					<font>الوظيفة</font>
+					<select ans-input input>
+						<option value="1">مدير</option>
+						<option value="2">موظف</option>
+					</select>
+			</div>
+		
+			<button class="blue" style="margin-top:1em;" onclick="AddNewSupplier(this);">تسجيل</button>
+			</div>
+	
+	</div>
+	<div suppliers-screen full-view>
+			<div class="topbar">
+					<img onclick="HideSuppliersScreen();" src="res/delete_sign_48px.png" alt="close" title="close">
+					<font>سجل الموردين</font>
+					<img src="res/add_book_127px.png" right onclick="ShowAddSupplierDialog();">
+			</div>
+			<div full-content-container>
+				<div class="ux-fragment" right smaller2 style='background-color: rgb(243,243,243);'>
+						<div class="ux-fragment-header">
+							<input type="text" class="ux-fragment-header-item" left bordered style="width:15em;">
+							<select class="ux-fragment-header-item" left bordered>
+								<option value="fullname">بحث بإسم المورد</option>
+								<option value="id">بحث برمز</option>
+								<option value="phone">بحث برقم الهاتف</option>
+								<option value="resident">بحث بمكان الإقامة</option>
+								<option value="work">بحث بمكان العمل</option>
+							</select>
+	
+							<img src="res/search_48px.png" class="ux-fragment-header-item" left title="بحث" style="margin-left:0.2em;" onclick="SearchForSuppliers(this);"/>
+							<img src="res/circled_right_48px.png" class="ux-fragment-header-item" right title="للأمام" style="margin-right:0.5em;" />
+							<img src="res/circled_left_48px.png" class="ux-fragment-header-item" right title="للخلف" />
+								
+						</div>
+						<div nice-scrollbar-on class="ux-fragment-content">
+							<div class="ux-supplier-item">
+								<img icon src="res/client_company_96px.png" alt="">
+								<font ellipse-words name> ساري عبدالرحمن عبدالرحيم الشهراني</font>
+								<font ellipse-words company>المزوره شركة الزوامل لحشي العملة</font>
+							</div>
+						</div>
+				</div>
+				<div class="ux-fragment" nice-scrollbar left bigger2 style='background-color: rgb(245,245,245);'></div>
+			</div>
+	</div>
+
+	<div hidden user-profile>
+				<center><img src="res/guest_male_127px.png" alt="user icon" width="100px" height="100px"
+						style=" border-radius: 50%; padding: 0.25em; border: 2px solid rgb(100, 100, 100); background-color: rgb(220, 220, 220);">
+				</center>
+				<h5 class="userID"></h5>
+	
+				<div class="settingsOpt">
+					<img src="res/settings_48px.png" alt="gear">
+					<font>الإعدادات</font>
+				</div>
+				<div class="settingsOpt" onclick="Logout();">
+					<img src="res/shutdown_48px.png" alt="gear">
+					<font>تسجيل الخروج</font>
+				</div>
+	</div>
+	
+			<div hidden uncatogrized-items>
+				<div class="topbar">
+					<img onclick="HideSpeedAccessPanel();" src="res/delete_sign_48px.png" alt="close" title="close">
+					<font>قائمة الوصول السريع</font>
+				</div>
+				<div nice-scrollbar  class="salt_list">		
+				</div>
+			</div>
+	
+	<div hidden restore-bill user-screen>
+				<div class="topbar">
+					<img onclick="HideRestoreBillsDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+					<font>فواتير المبيعات</font>
+				</div>
+				
+				<div full-content-container>
+					<div class="ux-fragment" right smaller2 style='background-color: rgb(243,243,243);'>
+						<div class="ux-fragment-header">
+							<input type="datetime-local" class="ux-fragment-header-item" left bordered style="width:15em;">
+							<select class="ux-fragment-header-item" left bordered></select>
+
+							<img src="res/search_48px.png"  class="ux-fragment-header-item" left title="بحث" style="margin-left:0.2em;" onclick="SearchForBills(this);"/>							
+							<img src="res/Paid_Search_48px.png" class="ux-fragment-header-item" left title="تحديد رمز الفاتورة" onclick="SetBillCode();"/>
+							<img src="res/circled_right_48px.png"  class="ux-fragment-header-item" right title="للأمام" style="margin-right:0.5em;" />
+							<img src="res/circled_left_48px.png"  class="ux-fragment-header-item" right title="للخلف" />
+							
+						</div>
+						<div nice-scrollbar class="ux-fragment-content">
+						</div>
+					</div>
+					<div class="ux-fragment" nice-scrollbar left bigger2 style='background-color: rgb(245,245,245);'></div>
+
+				</div>
+	</div>
+	
+	<div hidden info-dialog>
+				<font company>موديتور</font>
+				<div style="margin-top:0.5em;height:0.02em; background-color:rgb(100,100,100);"></div>
+				<font describtion>
+					لتطوير برمجيات مكتبية وتجارية لجميع المجالات
+				</font>
+				<font describtion style="font-size:13pt;">المبيعات في جلسة العمل : 15</font>
+				<font thanks>حقوق النسخ و إعادة التوزيع لجميع الأيقونات المستخدمة تعود لـ
+					<br/>
+					https://icon8.com
+				</font>
+	</div>
+	
+
+	<div hidden register-product-dialog user-dialog style="height:19em;">
+				<div class="topbar">
+					<img onclick="HideRegisterProductDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+					<font>تسجيل منتج جديد</font>
+				</div>
+	
+				<div nice-scrollbar full-content-container>
+					<div input-banner>
+						<font>إسم المنتج</font>
+						<input rpd-input type="text">
+					</div>
+					<div input-banner>
+							<font>الرقم التسلسلي</font>
+							<input rpd-input type="text">
+					</div>
+					<div input-banner>
+							<font>المورد/الشركة</font>
+							<input rpd-input type="text">
+					</div>
+					<div input-banner>
+							<font>الكمية</font>
+							<input rpd-input type="number" step="1" min="0">
+					</div>
+					<div input-banner>
+							<font>السعر</font>
+							<input rpd-input type="number" step="any" min="0">
+					</div>
+					<div input-banner>
+							<font>سعر الجملة</font>
+							<input rpd-input type="number" step="any" min="0">
+					</div>
+					<div input-banner>
+							<font>قابل للوزن</font>
+							<select rpd-input input>
+								<option value="1">نعم</option>
+								<option value="0">لا</option>
+							</select>
+					</div>
+					<div input-banner>
+							<font title="له تاريخ إنتهاء صلاحية">له ت.ا.ص</font>
+							<select rpd-input input>
+								<option value="1">نعم</option>
+								<option value="0">لا</option>
+							</select>
+					</div>
+					<div input-banner>
+							<font title="تاريخ إنتهاء الصلاحية">تاريخ .ا.ص</font>
+							<input rpd-input type="date">
+					</div>
+
+					<button class="blue" style="margin-top:1em;" onclick="RegisterNewProduct(this);">تسجيل</button>
+				</div>
+	</div>
+
+
+	<div hidden add-account-dialog user-dialog style="height:10em;">
+		<div class="topbar">
+			<img onclick="HideAddAccountDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+			<font>إضافة حساب مستخدم</font>
+		</div>
+
+		<div nice-scrollbar full-content-container>
+			<div input-banner>
+				<font>الإسم</font>
+				<input aad-input type="text">
+			</div>
+			<div input-banner>
+					<font>رمز  الدخول</font>
+					<input aad-input type="text">
+			</div>
+
+			<div input-banner>
+					<font>الصلاحية</font>
+					<select aad-input input>
+						<option value="1">أدمن</option>
+						<option value="2">موظف مبيعات</option>
+					</select>
+			</div>
+
+			<button class="blue" style="margin-top:1em;" onclick="AddNewAccount(this);">تسجيل</button>
+		</div>
+
+	</div>
+
+
+	<div notes hidden  user-dialog>
+		<div class="topbar">
+				<img onclick="HideNotesDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+				<font>الملاحظات</font>
+		</div>
+		<div id='notes' nice-scrollbar full-content-container class="noscroll">
+			<div tabs-container>
+				<font tab-link='tab1'>إضافة ملاحظة</font>
+				<font tab-link='tab2'>الملاحظات المحفوظة</font>
+			</div>
+			<div tabs-host>
+					<div tab-content='tab1'>
+						<div content>
+								<h4>أكتب العنوان و الملاحظة أدناه</h4>
+								<input type="text" class="fullwide-90 padding-05" placeholder="العنوان" style="font-family:'Times New Roman', Times, serif; font-size:13pt;">
+								<textarea  cols="30" rows="16" class="fullwide-90 padding-05" placeholder="أكتب الملاحظة هنا" style="margin-top:0.5em;font-family:'Times New Roman', Times, serif; font-size:11.5pt;"></textarea>
+								<button onclick="SaveNote(this);" class="blue padding">حفظ الملاحظة</button>
+						</div>
+					</div>
+					<div tab-content='tab2'>
+							<div content>
+									<h4>الملاحظات المحفوظة</h4>
+									<div note-listview nice-scrollbar></div>
+							</div>
+					</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div employee hidden user-dialog>
+			<div class="topbar">
+					<img onclick="HideEmployeeDialog();" src="res/delete_sign_48px.png" alt="close" title="close">
+					<img onclick="ReloadUsersData();" src="res/refresh.png" style="width:27px; height:27px;margin-top: 0.3em;" alt="refresh" title="refresh">
+
+					<font>الموظفين</font>
+			</div>
+			<div id='employee' nice-scrollbar full-content-container class="noscroll">
+				<div tabs-container>
+					<font tab-link='tab3'>الحسابات المسجلة</font>
+					<font tab-link='tab4'>المتصلة فقط</font>
+				</div>
+				<div tabs-host>
+						<div tab-content='tab3'>
+							<div content>
+								<h4> الحسابات المسجلة</h4>
+								<div users-listview nice-scrollbar></div>
+							</div>
+						</div>
+						<div tab-content='tab4'>
+								<div content>
+										<h4>الحسابات المتصلة</h4>
+										<div onlineusers-listview nice-scrollbar>
+										</div>
+								</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	<script src="js/ui.js"></script>
+	<script>module.ui.LoadProgressBar.Initialize();</script>
+	<script src="js/adminui.js"></script>
+</body>
+</html>
+
+
+
+<!-- 
+
+	وليد بو دري\ة 
+سند بوحميد
+
+-->
