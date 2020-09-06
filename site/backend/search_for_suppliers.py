@@ -95,3 +95,6 @@ except Exception as exp:
     ServerResult = '{"state":0, "code": -1, "extra": ""}' 
 finally:
     con.Close()
+
+    #div[suppliers-screen] > div[full-content-container] 
+    # > div.ux-fragment[smaller2] > div.ux-fragment-content

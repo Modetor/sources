@@ -36,7 +36,7 @@ const RestoreBillsFragmentRightSelect =
             q('div[restore-bill] > div[full-content-container] > div.ux-fragment[right] > div.ux-fragment-header > select');
 
 const SuppliersScreen = q('div[suppliers-screen]');
-
+const SuppliersListView = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-content');
 const AddSupplierDialog = q('div[add-supplier]');
 const ANS_Inputs = qlist('*[ans-input]');
 //#endregion
@@ -779,8 +779,10 @@ function SearchForSuppliers(o, move = 0) {
                 else module.errors.Alert(respond.code);
                 return;
             }
-
-            console.log(respond.extra);
+            CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
+            SuppliersList = respond.extra;
+            for(let i in SuppliersList) 
+                AddSupplierView(SuppliersList[i])
             
             module.ui.LoadProgressBar.End();
             o.enabled = true;
@@ -788,6 +790,18 @@ function SearchForSuppliers(o, move = 0) {
     });
 }
 
+function AddSupplierView(json) {
+    let container = q.create('DIV', {class: 'ux-supplier-item'});
+    let icon = q.create('IMG', {icon: '', src: 'res/client_company_96px.png'});
+    let name = q.create('FONT', {name: '', 'ellipse-words': '', text: json.fullname});
+    let company = q.create('FONT', {company: '', 'ellipse-words': '', text: json.work});
+
+    container.AddChild(icon);
+    container.AddChild(name);
+    container.AddChild(company);
+
+    SuppliersListView.AddChild(container);
+}
 
 /**\ 
 |||| A method used to show items in a particular payment bill
