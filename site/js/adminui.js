@@ -782,7 +782,7 @@ function SearchForSuppliers(o, move = 0) {
             CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
             SuppliersList = respond.extra;
             for(let i in SuppliersList) 
-                AddSupplierView(SuppliersList[i])
+                AddSupplierView(SuppliersList[i], i)
             
             module.ui.LoadProgressBar.End();
             o.enabled = true;
@@ -790,19 +790,37 @@ function SearchForSuppliers(o, move = 0) {
     });
 }
 
-function AddSupplierView(json) {
+/**\ 
+|||| عرض بيانات المورد
+||||  -----------------------------------
+|||| <param name='json'>supplier data as json</param>
+|||| <param name='i'>supplier's data's index</param>
+|||| تمت الإضافة بتاريخ 9-6-2020 .. 4:55 ص
+\**/
+function AddSupplierView(json,i) {
     let container = q.create('DIV', {class: 'ux-supplier-item'});
     let icon = q.create('IMG', {icon: '', src: 'res/client_company_96px.png'});
     let name = q.create('FONT', {name: '', 'ellipse-words': '', text: json.fullname});
     let company = q.create('FONT', {company: '', 'ellipse-words': '', text: json.work});
 
+    container.do('click', e => ViewSupplierProfile(json));
+
     container.AddChild(icon);
     container.AddChild(name);
     container.AddChild(company);
-
     SuppliersListView.AddChild(container);
 }
 
+/**\ 
+|||| عرض بيانات المورد
+||||  -----------------------------------
+|||| <param name='json'>supplier data as json</param>
+|||| <param name='i'>supplier's data's index</param>
+|||| تمت الإضافة بتاريخ 9-6-2020 .. 5:01 ص
+\**/
+function ViewSupplierProfile(json) {
+    
+}
 /**\ 
 |||| A method used to show items in a particular payment bill
 ||||  -----------------------------------
