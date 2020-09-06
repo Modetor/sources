@@ -767,6 +767,8 @@ function SearchForSuppliers(o, move = 0) {
             module.ui.LoadProgressBar.Update(percent);
         },
         success: respond => {
+            module.ui.LoadProgressBar.End();
+            SuppliersListView.Html(""); /* clear content xD */
             if(respond == null) {
                 module.errors.ServerNotResponding();
                 return;
@@ -779,12 +781,19 @@ function SearchForSuppliers(o, move = 0) {
                 else module.errors.Alert(respond.code);
                 return;
             }
-            CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
+            
+            // check if we fetch no data...
+            if(respond.extra.length == 0) {
+                module.ui.Toast(module.errors.RespondMessage[12], 400);
+                return;
+            }
             SuppliersList = respond.extra;
+            CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
+            
             for(let i in SuppliersList) 
                 AddSupplierView(SuppliersList[i], i)
             
-            module.ui.LoadProgressBar.End();
+            
             o.enabled = true;
         }
     });

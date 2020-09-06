@@ -18,5 +18,25 @@ module['ui'] = {
         Update(percent) {
             this.ProgressElement.style['width'] = percent+'%';
         }
+    },
+
+    Toast(text, time = 1500,position = 'bottom-start', icon = null) {
+        if(icon == null)
+            swal.fire({
+                width: 300,
+                position: position,
+                text: text,
+                showConfirmButton: false,
+                timer: time
+            });
+        else
+            swal.fire({
+                width: 300,
+                position: position,
+                text: text,
+                icon: icon,
+                showConfirmButton: false,
+                timer: time
+            });
     }
 }

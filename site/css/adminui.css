@@ -733,8 +733,14 @@ div[user-screen] > div[full-content-container] {
 
 
 @keyframes fullview_start {
-    from {transform: translateY(40%); opacity: 0.3;}
-    to {transform: translateY(0%); opacity: 1;}
+    from {/*transform: translateY(40%);*/
+        transform: rotate(-20deg);
+        transform-origin: 100% 0%; opacity: 0.3;
+    }
+    to {/*transform: translateY(0%); */
+        transform: rotateY(0deg);opacity: 1;
+        }
+    
 }
 @keyframes fullview_end {
     from {transform: translateY(0%); opacity: 1;}
@@ -742,7 +748,7 @@ div[user-screen] > div[full-content-container] {
 }
 div[full-view] {
     width: 100%; height:100%; position: fixed; top: 0px; user-select: none;
-    left:0px; opacity: 1; animation: fullview_start 0.2s ease-in;
+    left:0px; opacity: 1; animation: fullview_start 0.3s ease-in-out;
     background:rgb(250, 250 , 250); z-index: 50; animation-fill-mode: forwards;
 }
 

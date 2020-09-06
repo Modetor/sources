@@ -58,14 +58,17 @@ def Search(column, value, minID, move):
         cmd = MySqlCommand(commandString,con)
         rdr = cmd.ExecuteReader();
         extra = '[' 
+        count = 0
         while rdr.Read():
+            count += 1
             debts = rdr[7]
             print("W H::: > "+str(rdr[7]))
             if str(rdr[7]) == "":
                 debts = '[]'
             extra += '{"id": '+str(rdr[0])+',"fullname":"'+rdr[1]+'", "phone": "'+rdr[2]+'", "resident": "'+rdr[3]+'", "work": "'+rdr[4]+'", "position": '+str(rdr[5])+', "date": "'+rdr[6]+'", "debts": "'+debts+'"},'
 
-        extra = extra[:-1]
+        if not count == 0:
+            extra = extra[:-1] 
         extra += ']' 
         rdr.Close()
         return [True, 0, extra]
