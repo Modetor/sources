@@ -37,6 +37,7 @@ const RestoreBillsFragmentRightSelect =
 
 const SuppliersScreen = q('div[suppliers-screen]');
 const SuppliersListView = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-content');
+const SupplierDataView = qlist('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[bigger2] > div > div.user-name-with-icon');
 const AddSupplierDialog = q('div[add-supplier]');
 const ANS_Inputs = qlist('*[ans-input]');
 //#endregion
@@ -784,10 +785,14 @@ function SearchForSuppliers(o, move = 0) {
             
             // check if we fetch no data...
             if(respond.extra.length == 0) {
-                module.ui.Toast(module.errors.RespondMessage[12], 400);
+                SuppliersListView.Html(
+                    `<img style="margin-top: 2em;" src="res/nothing_found_127px.png" alt="">
+                     <h2 style="font-family: DROID_NASK_BOLD;color: #546e7a;">لا يوجد أي نتائج مطابقة</h2>`
+                );
                 return;
             }
             SuppliersList = respond.extra;
+            //SuppliersList.debts = JSON.parse(SuppliersList.debts);
             CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
             
             for(let i in SuppliersList) 
@@ -807,7 +812,7 @@ function SearchForSuppliers(o, move = 0) {
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 4:55 ص
 \**/
 function AddSupplierView(json,i) {
-    let container = q.create('DIV', {class: 'ux-supplier-item'});
+    let container = q.create('DIV', {class: 'ux-supplier-item', id: json.id});
     let icon = q.create('IMG', {icon: '', src: 'res/client_company_96px.png'});
     let name = q.create('FONT', {name: '', 'ellipse-words': '', text: json.fullname});
     let company = q.create('FONT', {company: '', 'ellipse-words': '', text: json.work});
@@ -828,7 +833,55 @@ function AddSupplierView(json,i) {
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 5:01 ص
 \**/
 function ViewSupplierProfile(json) {
-    
+    // name
+    SupplierDataView.Get(0).Childs()[1].Text(json.fullname);
+    // work & position
+    SupplierDataView.Get(1).Childs()[1].Text((json.position != 1 ? 'موظف': 'مدير')+' <font style="color:#2979ff">'+json.work+'</font>');
+    // debts
+    let money = 0;
+    json.debts.forEach(e => money += e.money);
+    money += ' دينار';
+    SupplierDataView.Get(2).Childs()[1].Text('قيمة المستحقات <font style="color:#00c853">'+money+'</font>');
+    // resident
+    SupplierDataView.Get(3).Childs()[1].Text('العنوان <font style="color:#ffa000">'+json.resident+'</font>');
+    // date
+    SupplierDataView.Get(4).Childs()[1].Text('تاريخ التسجيل <font style="color:#f50057">'+json.date+'</font>');
+    // phones
+    let phones = '';
+    json.phone.split(',').forEach(e => phones += (e+','));
+    SupplierDataView.Get(5).Childs()[1].Text(phones.substring(0, phones.length-1));
+    SupplierDataView.Get(7).do('click', event => {
+        q.Ajax.PostConfig('backend/delete_supplier.php', {
+            data: {
+                    'sid': sessionStorage.getItem('sid'), 
+                    'id': json.id
+                  },
+            onstart: event => module.ui.LoadProgressBar.Start(),
+            
+            onprogress: event => {
+                let percent = (event.loaded /  event.total)*100;
+                module.ui.LoadProgressBar.Update(percent);
+            },
+            success : respond => {
+                module.ui.LoadProgressBar.End();
+                if(respond == null) {
+                    module.errors.ServerNotResponding();
+                    return;
+                }
+                respond = JSON.parse(respond);
+
+                if(respond.state == 0 || respond.code != 0) {
+                    if(respond.code == 3) module.errors.ShowSessionExpiredDialog();
+                    else module.errors.Alert(respond.code);
+                    return;
+                }
+                SupplierDataView.forEach(e => e.attr('hidden', ''));
+                q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-content > div.ux-supplier-item[id="'+json.id+'"]').Remove();
+                
+            }
+        });
+    });
+    SupplierDataView.forEach(e => e.rattr('hidden'));
 }
 /**\ 
 |||| A method used to show items in a particular payment bill

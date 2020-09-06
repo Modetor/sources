@@ -41,39 +41,28 @@ def IsValidSession(session):
                         state = True
                         r = uid
             rdr.Close()
+            if state:
+                commandString = "select permission from users where id="+str(r)+";"
+                cmd = MySqlCommand(commandString,con)
+                rdr = cmd.ExecuteReader()
+                if not rdr.Read():
+                    rdr.Close()
+                    state = False
+                    r = 1
+                else:
+                    if rdr[0] > 1:
+                        state = False
+                        r = 9
+                    else:
+                        state = True
+                        r = 0
+                rdr.Close()
         return [state, r]
     except Exception as exp:
         r += str(exp)
         LogError('IsValidSession', exp)
         return [False,  -1]
 
-
-def Search(column, value, minID, move):
-    try:
-        if not move == ">" and not move == "<":
-            raise Exception("Operation denied, parameter 'move'") 
-        if minID == 0 and move == '>':
-            move = '>='
-        commandString = 'SELECT * FROM suppliers WHERE id '+move+' '+minID+' and '+column+' LIKE "%' + value + '%" LIMIT 30;'
-        cmd = MySqlCommand(commandString,con)
-        rdr = cmd.ExecuteReader();
-        extra = '[' 
-        count = 0
-        while rdr.Read():
-            count += 1
-            debts = rdr[7]
-            if str(rdr[7]) == "":
-                debts = '[]'
-            extra += '{"id": '+str(rdr[0])+',"fullname":"'+rdr[1]+'", "phone": "'+rdr[2]+'", "resident": "'+rdr[3]+'", "work": "'+rdr[4]+'", "position": '+str(rdr[5])+', "date": "'+rdr[6]+'", "debts": '+debts+'},'
-
-        if not count == 0:
-            extra = extra[:-1] 
-        extra += ']' 
-        rdr.Close()
-        return [True, 0, extra]
-    except Exception as exp:
-        LogError('Search', exp)
-        return [False, -1]
 
 
 
@@ -83,17 +72,16 @@ try:
     if not result[0]:
         ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
     else:
-        result = Search(
-            ServerParams.Get('type').strip(),ServerParams.Get('value').strip(),
-            ServerParams.Get('minID').strip(), ServerParams.Get('move').strip()
-        )
-        if not result[0]:
-            ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+        query = 'DELETE FROM suppliers WHERE id='+ServerParams.Get('id').strip()+';'
+        cmd = MySqlCommand(query,con)
+        if cmd.ExecuteNonQuery() == 0:
+            ServerResult = '{"state":0, "code": 6, "extra": ""}' 
         else:
-            ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+result[2]+'}' 
+            ServerResult = '{"state":1, "code": 0, "extra": ""}' 
 except Exception as exp:
     con.Close()
     LogError("___main___", exp)
     ServerResult = '{"state":0, "code": -1, "extra": ""}' 
 finally:
     con.Close()
+

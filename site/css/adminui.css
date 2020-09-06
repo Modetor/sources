@@ -9,7 +9,7 @@
 *[left]{float: left;}
 
 *[hidden] {display: none;}
-
+*[clickable] {cursor: pointer;}
 *[align-center] {display: block; text-align: -webkit-center;}
 *[ellipse-words] {text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
 
@@ -514,6 +514,7 @@ div[info-dialog] > font[thanks] {
 .padding-05 {padding-left: 0.5em;padding-right: 0.5em;padding-top: 0.2em;padding-bottom: 0.2em;}
 .margin-left-05 {margin-left: 0.5em;}
 .margin-right-05 {margin-right: 0.5em;}
+.margin-top-05 {margin-right: 0.5em;}
 .note-card {
     position: relative;
     width: 100%; height: 2em; background-color: rgb(220, 220, 220);
@@ -780,12 +781,39 @@ div[full-view] > div[full-content-container] {
     text-align: right; max-height: 1.5em;
     width: 14em;
     top: 0.4em; right:3em; line-break: strict;
-    font-size: 13pt; font-family: DROID_NASK_BOLD; word-wrap: none;
+    font-size: 13pt; font-family: DROID_NASK_BOLD,NUNITO_BOLD; word-wrap: none;
 }
 
 .ux-supplier-item > font[company] {
     color:#2979ff;
     top: 0.8em; left:0.3em; text-align:right;
     width: calc(100% - 14.2em - 4.7em - 36px);
-    font-size: 10.5pt; font-family: DROID_NASK_BOLD;
+    font-size: 10.5pt; font-family: DROID_NASK_BOLD,NUNITO_BOLD;
 }
+
+
+
+
+
+
+
+.user-name-with-icon { 
+    direction: rtl; background-color: rgb(253, 253, 253);
+    width: auto; height: 4em; border-radius: 0.4em; transition: box-shadow 0.3s;
+    box-shadow: 0px 0px 10px 2px rgb(210, 210, 210);float: left;
+    margin:1em; margin-left: 0px; margin-bottom: 0px; padding-left: 0.5em; padding-right: 0.5em;
+}
+.user-name-with-icon[clickable]:hover {
+    box-shadow: 0px 0px 15px 4px #b0bec5;
+}
+.user-name-with-icon[right] {float: right;}
+.user-name-with-icon > img { 
+    float: right; width: 4em; height: 4em;
+}
+.user-name-with-icon > font {
+    font-size:11pt; float: right;
+    font-family: DROID_NASK_BOLD,NUNITO_BOLD;
+    margin-top: 2.4em; margin-right: 0.5em;
+}
+
+

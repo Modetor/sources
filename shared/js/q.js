@@ -1,8 +1,8 @@
 function getChilderns(elem)
     {
         if(elem == null || elem.children.length == 0) return;
-        var childs = [elem.children.length];
-        for (let index = 0; index < childs.length; index++) {
+        var childs = [];
+        for (let index = 0; index < elem.children.length; index++) {
             childs[index] = q(elem.children[index]);
         }
         return childs;
