@@ -1,12 +1,33 @@
-//import {RespondMessage,ServerNotResponding,ShowSessionExpiredDialog} from './errors.js'
+/**\
+>>>>
+>>>> PROJECT NAME Merchant hand: Grocery & aromatic (MHGA)
+>>>> PROJECT CODE MODERN-CREATOR-SYS-GEN1-MH:GA
+>>>> DATE 27-4-2020 1:00 AM
+>>>> AUTHORS Mohammad s. Albay
+>>>>
+\**/
 
-//#region const Definitions
+
+
+
+//#region CONST DEFINITIONS
 let MyID = Number.MIN_VALUE,    MyPermission;
 let NotesArray = [];
 let UsersData = [];
-let CurrentMinBillID = 0, CurrentMinSupplierID = 0, MoveNumber = 30;
+let CurrentMinBillID = 0, MoveNumber = 2;
+/* 22-9-2020 */
+const Supplier = {
+    TotalCount : 0,
+    MaxID : 0, 
+    MinID : 0,
+    CanMoveForword : true, 
+    CanMoveBackword : false,
+    SuppliersList : [],
+    CurrentMinSupplierID : 0,
+    CurrentMaxSupplierID : 0,
+}
 let FetchedBillsArray = [];
-let SuppliersList = [];
+
 
 const MiddleSidePanel = q('div[middle-area]');
 
@@ -41,7 +62,12 @@ const SupplierDataView = qlist('div[suppliers-screen] > div[full-content-contain
 const AddSupplierDialog = q('div[add-supplier]');
 const ANS_Inputs = qlist('*[ans-input]');
 //#endregion
-//#region Show n Hide
+
+
+
+
+
+//#region SHOW & HIDE
 function ShowUserProfile() {
     if(UserProfile.hasattr('hidden'))
         UserProfile.rattr('hidden');
@@ -117,6 +143,11 @@ function HideSuppliersScreen() {
 }
 //#endregion
 
+
+
+
+
+//#region TOOLBOX CLICK EVENTS
 q('div.appbar > button[employee-button]').do('click', e => {
     if(EmployeeDialog.hasattr('hidden'))
         EmployeeDialog.rattr('hidden');
@@ -170,6 +201,12 @@ ToolboxViewPaymentBillsButton.do('click', e => {
     else
     RestoreBillsDialog.attr('hidden', '');
 });
+//#endregion
+
+
+
+
+
 /*\
 [-] ------------------------------------------------------
 [-] Core method 
@@ -185,11 +222,10 @@ q.ready( async () => {
         for(let i in NotesArray)
             AddNoteToHtml(NotesArray[i]);
     }
+    // used as toolbox items background colors
     const colors = [
                         '#fb8c00','#ffb74d', // orange 8
                         '#43a047','#81c784', // green 7
-                        
-                       
                         '#536dfe','#304ffe', // indigo 4
                         '#d81b60', '#ec407a', // pink 6
                         '#009688','#00796b', // teal 3
@@ -208,17 +244,20 @@ q.ready( async () => {
     await GetAccountsData();
     SetupHosts(['notes','employee']);
     SearchForBills({disabled: false});
-
-
-    
-    
+    // initial search
+    PrepareSupplierUI();
 });
 
 
 
 
 
-
+/**\ 
+|||| دالة تعيد طلب بيانات المستخدمين
+||||  -----------------------------------
+|||| <param name='json'>employee data set in JSON format</param>
+|||| <param name='otherSide'>when true means this will add data to "ACTIVE NOW" Tap</param>
+\**/
 async function SetupHosts(arr) {
     for (var item in arr) {
         let tabsContent = qlist('#'+arr[item]+' > div[tabs-host] > div[tab-content]');
@@ -254,6 +293,95 @@ async function SetupHosts(arr) {
 }
 
 
+
+
+/**\ 
+|||| دالة تطلب بيانات المستخدمين
+||||  -----------------------------------
+|||| تمت الإضافة بتاريخ 9-22-2020 .. 9:30 م
+\**/
+function PrepareSupplierUI() {
+
+    q.Ajax.PostConfig('backend/search_for_suppliers.php', {
+        data:  {
+                'sid': sessionStorage.getItem('sid'), 
+                'fetch_count' : 0
+               },
+        onstart: event => module.ui.LoadProgressBar.Start(),
+        onprogress: event => {
+            let percent = (event.loaded /  event.total)*100;
+            module.ui.LoadProgressBar.Update(percent);
+        },
+        success: respond => {
+            module.ui.LoadProgressBar.End();
+            if(respond == null) {
+                module.errors.ServerNotResponding();
+                return;
+            }
+
+            respond = JSON.parse(respond);
+            
+            if(respond.state == 0 || respond.code != 0) {
+                if(respond.code == 3) module.errors.ShowSessionExpiredDialog();
+                else module.errors.Alert(respond.code);
+                return;
+            }
+            Supplier.TotalCount = respond.extra;
+        }
+    });
+
+    q.Ajax.PostConfig('backend/search_for_suppliers.php', {
+        data:  {
+                'sid': sessionStorage.getItem('sid'),
+               },
+        onstart: event => module.ui.LoadProgressBar.Start(),
+        onprogress: event => {
+            let percent = (event.loaded /  event.total)*100;
+            module.ui.LoadProgressBar.Update(percent);
+        },
+        success: respond => {
+            module.ui.LoadProgressBar.End();
+            if(respond == null) {
+                module.errors.ServerNotResponding();
+                return;
+            }
+
+            respond = JSON.parse(respond);
+            
+            if(respond.state == 0 || respond.code != 0) {
+                if(respond.code == 3) module.errors.ShowSessionExpiredDialog();
+                else module.errors.Alert(respond.code);
+                return;
+            }
+            // check if we fetch no data...
+            if(respond.extra.length == 0) {
+                SuppliersListView.Html(
+                    `<img style="margin-top: 2em;" src="res/nothing_found_127px.png" alt="">
+                    <h2 style="font-family: DROID_NASK_BOLD;color: #546e7a;">لم يتم تسجيل أي مورد بعد!</h2>`
+                );
+                return;
+            }
+            Supplier.SuppliersList = respond.extra;
+            
+            let tempArray = Supplier.SuppliersList.pop();
+            Supplier.MinID = tempArray['min-id'];
+            Supplier.MaxID = tempArray['max-id'];
+            Supplier.CanMoveForword = tempArray['can-move-forward'];
+            Supplier.CanMoveBackword = tempArray['can-move-backword'];
+
+            Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
+            Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
+            
+            for(let i in Supplier.SuppliersList) 
+                AddSupplierView(Supplier.SuppliersList[i], i)
+
+        }
+    });
+}
+/**\ 
+|||| دالة تطلب بيانات المستخدمين
+||||  -----------------------------------
+\**/
 async function GetAccountsData() 
 {
     q.Ajax.Get('backend/get_users_data.php', v => {
@@ -277,6 +405,13 @@ async function GetAccountsData()
         }
     });
 }
+/**\ 
+|||| دالة تعرض بيانات الموظفين في تبويت الحسابات
+|||| و تبويب الحسابات النشطة
+||||  -----------------------------------
+|||| <param name='json'>employee data set in JSON format</param>
+|||| <param name='otherSide'>when true means this will add data to "ACTIVE NOW" Tap</param>
+\**/
 function AddToEmployeeList(json, otherSide = false) {
     let isonline = json.online == 1;
     var container = q.create('DIV', {class: 'user-card',data: json.id, title: 'مسجل بتاريخ '+json.createdat});
@@ -338,6 +473,10 @@ function AddToEmployeeList(json, otherSide = false) {
     }
     
 }
+/**\ 
+|||| دالة تعيد طلب بيانات المستخدمين
+||||  -----------------------------------
+\**/
 async function ReloadUsersData()
 {
     let parents = [q('div[onlineusers-listview]').Target.children,q('div[users-listview]').Target.children];
@@ -353,6 +492,15 @@ async function ReloadUsersData()
 
 
 
+
+
+/**\ 
+|||| دالة تتفاعل مع واجهة اضافة منتج وتتحقق 
+|||| من القيم المدخلة و يتم التسجيل في حال كانت
+|||| المدخلات صحيحة
+||||  -----------------------------------
+|||| <param name='self'>The button</param>
+\**/
 function RegisterNewProduct(self) {
 
     let check = true;
@@ -425,6 +573,13 @@ function RegisterNewProduct(self) {
 
 
 
+/**\ 
+|||| دالة تتفاعل مع واجهة اضافة حساب مستخدم وتتأكد 
+|||| من القيم المدخلة و يتم التسجيل في حال المدخلات 
+|||| كانت صحيحة
+||||  -----------------------------------
+|||| <param name='self'>The button</param>
+\**/
 function AddNewAccount(self) {
     self.disabled = true;
 
@@ -449,7 +604,10 @@ function AddNewAccount(self) {
         else swal.fire({type: 'error', text: v.substring(1)});
     });
 }
-
+/**\ 
+|||| حذف حساب موظف
+||||  -----------------------------------
+\**/
 function DeleteUserAccount() {
     swal.fire({input:'text', title: 'Type user name'}).then(a => {
         if(a.value != null && a.value != '') {
@@ -464,7 +622,10 @@ function DeleteUserAccount() {
 }
 
 
-
+/**\ 
+|||| تسجيل الخروج من هذا الحساب
+||||  -----------------------------------
+\**/
 function Logout() {
     q.Ajax.Get('backend/logout.php?uid='+sessionStorage.getItem('id'), v => {
         if(v == '0')
@@ -480,7 +641,11 @@ function Logout() {
 
 
 
-
+/**\ 
+|||| بحث عن فواتير
+||||  -----------------------------------
+|||| <param name='self'>The save button</param>
+\**/
 function SaveNote(self) {
     self.disabled = true;
 
@@ -499,6 +664,11 @@ function SaveNote(self) {
     self.disabled = false;
     swal.fire('تم حفظ الملاحظة');
 }
+/**\ 
+|||| دالة تعرض الملاحظات في قائمة الملاحظات
+||||  -----------------------------------
+|||| <param name='json'>Structured JSON-based note information</param>
+\**/
 function AddNoteToHtml(json) {
     var container = q.create('DIV', {class: 'note-card'});
     var title = q.create('font', {title: ''}),
@@ -533,6 +703,11 @@ function AddNoteToHtml(json) {
 
 
 
+/**\ 
+|||| بحث عن فواتير
+||||  -----------------------------------
+|||| <param name='self'>The search icon</param>
+\**/
 async function SearchForBills(self) {
     self.disabled = true;
     let params = 'sid='+sessionStorage.getItem('sid');
@@ -568,12 +743,8 @@ async function SearchForBills(self) {
         self.disabled = false;
     });
 }
-
-
-
-
 /**\ 
-|||| A method used to add items to Bill-UI
+|||| تضيف نتائج البحث لقائمة الفواتير
 ||||  -----------------------------------
 |||| <param name='json'>Structured JSON-based bills information</param>
 |||| <param name='i'>The index of json</param>
@@ -602,7 +773,7 @@ function AddToSearchBillUI(json, i) {
     q('div[restore-bill] > div[full-content-container] > div.ux-fragment[right] > div.ux-fragment-content').AddChild(container);
 }
 /**\ 
-|||| A method used to show items in a particular payment bill
+|||| دالة تضيف الفاتورة لقائمة الفواتير
 ||||  -----------------------------------
 |||| <param name='json'>Structured JSON-based bills information</param>
 |||| <param name='i'>The index of json</param>
@@ -694,7 +865,7 @@ function ShowBillUI(json, index) {
 
 }
 /**\ 
-|||| Search for bill's code
+||||  دلة للبحث بإستخدام رمز الفاتورة
 ||||  -----------------------------------
 ||||
 \**/
@@ -735,7 +906,6 @@ function SetBillCode() {
 
 
 
-
 /**\ 
 |||| إسترجاع قائمة ببيانات الموردين المسجلين وعرضهم
 ||||  -----------------------------------
@@ -743,23 +913,26 @@ function SetBillCode() {
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 2:08 ص
 \**/
 function SearchForSuppliers(o, move = 0) {
+    let value = 'no-value';
+    let type = 'no-condition';
     if(move == 0) {
-        CurrentMinSupplierID = 0;
+        Supplier.CurrentMinSupplierID = 0;
         move = 1;
+        type = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select').Value();
+        value = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > input').Value().trim();
+        if(value == "" || type == "") {
+            module.errors.Note(21);
+            return;
+        }
     }
-    let value = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > input').Value().trim();
-    let type = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select').Value();
-
-    if(value == "" || type == "") {
-        module.errors.Note(21);
-        return;
-    }
+    
 
     q.Ajax.PostConfig('backend/search_for_suppliers.php', {
         data: {
                 'sid': sessionStorage.getItem('sid'), 
                 'value': value, 'type':type,
-                'minID': CurrentMinSupplierID, 
+                'mid': Supplier.CurrentMinSupplierID, 
+                'Mid': Supplier.CurrentMaxSupplierID,
                 'move': move < 0 ? '<' : '>'
                },
         onstart: event => module.ui.LoadProgressBar.Start(),
@@ -769,7 +942,7 @@ function SearchForSuppliers(o, move = 0) {
         },
         success: respond => {
             module.ui.LoadProgressBar.End();
-            SuppliersListView.Html(""); /* clear content xD */
+            
             if(respond == null) {
                 module.errors.ServerNotResponding();
                 return;
@@ -782,7 +955,7 @@ function SearchForSuppliers(o, move = 0) {
                 else module.errors.Alert(respond.code);
                 return;
             }
-            
+            SuppliersListView.Html(""); /* clear content xD */
             // check if we fetch no data...
             if(respond.extra.length == 0) {
                 SuppliersListView.Html(
@@ -791,19 +964,25 @@ function SearchForSuppliers(o, move = 0) {
                 );
                 return;
             }
-            SuppliersList = respond.extra;
-            //SuppliersList.debts = JSON.parse(SuppliersList.debts);
-            CurrentMinSupplierID = respond.extra[respond.extra.length-1].id;
+            Supplier.SuppliersList = respond.extra;
             
-            for(let i in SuppliersList) 
-                AddSupplierView(SuppliersList[i], i)
+            let tempArray = Supplier.SuppliersList.pop();
+            Supplier.MinID = tempArray['min-id'];
+            Supplier.MaxID = tempArray['max-id'];
+            Supplier.CanMoveForword = tempArray['can-move-forward'];
+            Supplier.CanMoveBackword = tempArray['can-move-backword'];
+
+            Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
+            Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
+            
+            for(let i in Supplier.SuppliersList) 
+                AddSupplierView(Supplier.SuppliersList[i], i);
             
             
             o.enabled = true;
         }
     });
 }
-
 /**\ 
 |||| عرض بيانات المورد
 ||||  -----------------------------------
@@ -824,7 +1003,6 @@ function AddSupplierView(json,i) {
     container.AddChild(company);
     SuppliersListView.AddChild(container);
 }
-
 /**\ 
 |||| عرض بيانات المورد
 ||||  -----------------------------------
@@ -884,7 +1062,7 @@ function ViewSupplierProfile(json) {
     SupplierDataView.forEach(e => e.rattr('hidden'));
 }
 /**\ 
-|||| A method used to show items in a particular payment bill
+|||| دالة تضيف 
 ||||  -----------------------------------
 |||| <param name='o'>the 'save' button in $(AddSupplierDialog)</param>
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 1:54 ص

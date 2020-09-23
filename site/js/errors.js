@@ -1,3 +1,4 @@
+
 var module = module || {};
 module['errors'] = {
     RespondMessage : {
@@ -64,27 +65,3 @@ module['errors'] = {
     }
 
 }
-
-
-
-
-/*
-function(e) {
-        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
-        
-      };
-
-if(xhr.upload)
-     xhr.upload.onprogress=upload.updateProgress;
-
-function updateProgress(evt) 
-{
-   if (evt.lengthComputable) {
-       var progress = Math.ceil(((upload.loaded + evt.loaded) / upload.total) * 100);
-       $("#dvProgressPrcent").html(progress + "%");
-       $get('dvProgress').style.width = progress + '%';
-   }
-}
-
-
-*/

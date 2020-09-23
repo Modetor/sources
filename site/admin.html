@@ -149,7 +149,7 @@
 			</div>
 	
 	</div>
-	<div suppliers-screen full-view>
+	<div hidden suppliers-screen full-view>
 			<div class="topbar">
 					<img onclick="HideSuppliersScreen();" src="res/delete_sign_48px.png" alt="close" title="close">
 					<font>سجل الموردين</font>
@@ -168,8 +168,8 @@
 							</select>
 	
 							<img src="res/search_48px.png" class="ux-fragment-header-item" left title="بحث" style="margin-left:0.2em;" onclick="SearchForSuppliers(this);"/>
-							<img src="res/circled_right_48px.png" class="ux-fragment-header-item" right title="للأمام" style="margin-right:0.5em;" />
-							<img src="res/circled_left_48px.png" class="ux-fragment-header-item" right title="للخلف" />
+							<img src="res/circled_right_48px.png" class="ux-fragment-header-item" right title="للأمام" style="margin-right:0.5em;" onclick="SearchForSuppliers(this,1);" />
+							<img src="res/circled_left_48px.png" class="ux-fragment-header-item" right title="للخلف" onclick="SearchForSuppliers(this,-1);" />
 								
 						</div>
 						<div nice-scrollbar-on class="ux-fragment-content"></div>
