@@ -47,23 +47,26 @@ def IsValidSession(session):
         LogError('IsValidSession', exp)
         return [False,  -1]
 
+def BuildCommand(column, value, move, min, max, limit):
+    if column == None and value == None and move == None:
+        return 'SELECT * FROM suppliers LIMIT '+limit+';'
+    if not move == ">" and not move == "<" :
+        print('W [File:search_for_suppliers, Func: BuildCommand] ScriptError > invalid value assigned to "move". using base query as a fallback \n')
+        return 'SELECT * FROM suppliers LIMIT '+limit+';'  
+    if min == 0 and move == '>':
+        move = '>='
+    print(type(min))
+    commandString = ''
+    if column == None and value == None and min == 0:
+        commandString = 'SELECT * FROM suppliers LIMIT '+limit+';'
+    else:
+        commandString = 'SELECT * FROM suppliers WHERE id '+move+' '+minID+' and '+column+' LIKE "%' + value + '%" LIMIT 2;'
 # > forware
 # < backward
 
-def Search(column, value, minID, move):
+def Search(column, value, move, min, max, limit):
     try:
-        if not move == ">" and not move == "<":
-            raise Exception("Operation denied, parameter 'move'") 
-        if minID == 0 and move == '>':
-            move = '>='
-
-        commandString = ''
-        if column == None and value == None and minID == 0:
-            commandString = 'SELECT * FROM suppliers LIMIT 2;'
-        else:
-            commandString = 'SELECT * FROM suppliers WHERE id '+move+' '+minID+' and '+column+' LIKE "%' + value + '%" LIMIT 2;'
-        print("cmd:"+commandString)
-        cmd = MySqlCommand(commandString,con)
+        cmd = MySqlCommand(BuildCommand(column, value, move, min, max, limit),con)
         rdr = cmd.ExecuteReader()
         extra = '[' 
         count = 0
@@ -113,12 +116,38 @@ def GetSuppliersCount():
             rdr.Close()
             return [False, 5]
         else:
-            print("X - "+str(rdr[0])+"\n")
             rdr.Close()
             return [True, 0, 6]
     except Exception as exp:
         LogError('GetSuppliersCount', exp)
         return [False, -1]
+
+
+def HandleRequest():
+    #
+    # fetch count
+    #
+    if ServerParams.HasKey('fetch_count'):
+        result = GetSuppliersCount()
+        if not result[0]:
+            ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+        else:
+            ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+str(result[2])+'}' 
+    #
+    # fetch count
+    #
+    elif ServerParams.HasKey('initial'):
+        pass
+    #
+    # fetch count
+    #
+    elif ServerParams.HasKey('search'):
+        pass
+    #
+    # fetch count
+    #
+    elif ServerParams.HasKey('move'):
+        pass
 
 
 
@@ -128,35 +157,49 @@ try:
     if not result[0]:
         ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
     else:
-        if ServerParams.HasKey('fetch_count'):
-            print("\nQuery for suppliers count :)\n");
-            result = GetSuppliersCount()
-            if not result[0]:
-                ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
-            else:
-                ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+str(result[2])+'}' 
-        else:
-            if (not ServerParams.HasKey('type') and 
-                not ServerParams.HasKey('value') and 
-                not ServerParams.HasKey('move')):
-                result = Search(None,None,ServerParams.HasKey('mid').strip(),'>')
-            elif (not ServerParams.HasKey('type') and 
-                  not ServerParams.HasKey('value') and 
-                  not ServerParams.HasKey('mid') and 
-                  not ServerParams.HasKey('move')):
-                result = Search(None,None,0,'>')
-            else:
-                result = Search(
-                    ServerParams.Get('type').strip(),ServerParams.Get('value').strip(),
-                    ServerParams.Get('minID').strip(), ServerParams.Get('move').strip()
-                )
-            if not result[0]:
-                ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
-            else:
-                ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+result[2]+'}' 
+        HandleRequest()
 except Exception as exp:
     con.Close()
     LogError("___main___", exp)
     ServerResult = '{"state":0, "code": -1, "extra": ""}' 
 finally:
     con.Close()
+
+
+
+
+
+
+
+"""
+if ServerParams.HasKey('fetch_count'):
+            result = GetSuppliersCount()
+            if not result[0]:
+                ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+            else:
+                ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+str(result[2])+'}' 
+        else:
+            if not ServerParams.HasKey('move') or not ServerParams.HasKey('limit'):
+                ServerResult = '{"state":0, "code": 2, "extra": ""}'
+            else:
+                limit = int(ServerParams.Get('limit'))
+                if ServerParams.HasKey('initial'):
+                    result = Search(None, None, None, 0, 0, str(limit))
+                else:
+                    move = ServerParams.Get('move').strip()
+                    if move == '0': # search
+                        result = Search(
+                            ServerParams.Get('type').strip(),
+                            ServerParams.Get('value').strip(),
+                            '>', 0, 0
+                        )
+                    elif move == '-1': # backward
+                        pass
+                    elif move == '1': # forward
+                        pass
+
+                if not result[0]:
+                    ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+                else:
+                    ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+result[2]+'}' 
+"""

@@ -25,7 +25,6 @@ def IsValidSession(session):
         state = True
         r = None
         commandString = "select expd,uid,ip from sessions where sid='"+session+"';"
-        #print("CMD -->> '"+commandString+"'\n")
         cmd = MySqlCommand(commandString,con)
         rdr = cmd.ExecuteReader()
         if not rdr.Read():

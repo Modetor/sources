@@ -23,8 +23,7 @@ const Supplier = {
     CanMoveForword : true, 
     CanMoveBackword : false,
     SuppliersList : [],
-    CurrentMinSupplierID : 0,
-    CurrentMaxSupplierID : 0,
+    BoundaryState = []
 }
 let FetchedBillsArray = [];
 
@@ -333,6 +332,8 @@ function PrepareSupplierUI() {
     q.Ajax.PostConfig('backend/search_for_suppliers.php', {
         data:  {
                 'sid': sessionStorage.getItem('sid'),
+                'limit': MoveNumber, 
+                'move' : 0, 'initial' : 0
                },
         onstart: event => module.ui.LoadProgressBar.Start(),
         onprogress: event => {
@@ -369,8 +370,8 @@ function PrepareSupplierUI() {
             Supplier.CanMoveForword = tempArray['can-move-forward'];
             Supplier.CanMoveBackword = tempArray['can-move-backword'];
 
-            Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
-            Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
+            //Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
+            //Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
             
             for(let i in Supplier.SuppliersList) 
                 AddSupplierView(Supplier.SuppliersList[i], i)
@@ -910,31 +911,39 @@ function SetBillCode() {
 |||| إسترجاع قائمة ببيانات الموردين المسجلين وعرضهم
 ||||  -----------------------------------
 |||| <param name='o'>the 'search' icon in $(SuppliersScreen)</param>
+|||| <param name='move'>0 means search, < 0 backword, > 0 forward</param>
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 2:08 ص
 \**/
 function SearchForSuppliers(o, move = 0) {
     let value = 'no-value';
     let type = 'no-condition';
+    let queryData;
+    // SEARCH BUTTON
     if(move == 0) {
-        Supplier.CurrentMinSupplierID = 0;
-        move = 1;
-        type = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select').Value();
-        value = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > input').Value().trim();
-        if(value == "" || type == "") {
-            module.errors.Note(21);
-            return;
-        }
+            type = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select').Value();
+            value = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > input').Value().trim();
+            if(value == "" || type == "") {
+                module.errors.Note(21);
+                return;
+            }
+            queryData = {
+                'sid': sessionStorage.getItem('sid'),
+                'limit': MoveNumber,
+                'value': value, 'type':type, 'move': 0
+            };
+    }
+    // BACKWARD, FORWARD BUTTON
+    else {
+            queryData = {
+                'sid': sessionStorage.getItem('sid'),
+                'move': move < 0 ? -1 : 1, 'limit': MoveNumber,
+                'min': 0,//Supplier.CurrentMinSupplierID,
+                'max': 0,//Supplier.CurrentMaxSupplierID,
+            };
     }
     
-
     q.Ajax.PostConfig('backend/search_for_suppliers.php', {
-        data: {
-                'sid': sessionStorage.getItem('sid'), 
-                'value': value, 'type':type,
-                'mid': Supplier.CurrentMinSupplierID, 
-                'Mid': Supplier.CurrentMaxSupplierID,
-                'move': move < 0 ? '<' : '>'
-               },
+        data: queryData,
         onstart: event => module.ui.LoadProgressBar.Start(),
         onprogress: event => {
             let percent = (event.loaded /  event.total)*100;
@@ -972,14 +981,13 @@ function SearchForSuppliers(o, move = 0) {
             Supplier.CanMoveForword = tempArray['can-move-forward'];
             Supplier.CanMoveBackword = tempArray['can-move-backword'];
 
-            Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
-            Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
+            //Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
+            //Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
             
             for(let i in Supplier.SuppliersList) 
                 AddSupplierView(Supplier.SuppliersList[i], i);
             
             
-            o.enabled = true;
         }
     });
 }
