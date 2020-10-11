@@ -1,6 +1,6 @@
 /**\
 >>>>
->>>> PROJECT NAME Merchant hand: Grocery & aromatic (MHGA)
+>>>> PROJECT NAME Merchant Hand: Grocery & aromatic (MHGA)
 >>>> PROJECT CODE MODERN-CREATOR-SYS-GEN1-MH:GA
 >>>> DATE 27-4-2020 1:00 AM
 >>>> AUTHORS Mohammad s. Albay
@@ -16,14 +16,15 @@ let NotesArray = [];
 let UsersData = [];
 let CurrentMinBillID = 0, MoveNumber = 2;
 /* 22-9-2020 */
-const Supplier = {
+const SupplierSearch = {
+    Type : 'initial',
     TotalCount : 0,
     MaxID : 0, 
     MinID : 0,
     CanMoveForword : true, 
     CanMoveBackword : false,
-    SuppliersList : [],
-    BoundaryState = []
+    SuppliersSearchsList : [],
+    BoundaryState : []
 }
 let FetchedBillsArray = [];
 
@@ -58,6 +59,12 @@ const RestoreBillsFragmentRightSelect =
 const SuppliersScreen = q('div[suppliers-screen]');
 const SuppliersListView = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-content');
 const SupplierDataView = qlist('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[bigger2] > div > div.user-name-with-icon');
+/* Seachbar move forward and backward elements */
+const SuppliersSearchbarMoveForward  = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > img[title="للأمام"]'),
+      SuppliersSearchbarMoveBackward = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > img[title="للخلف"]');
+
+const SuppliersSearchbarTypeElement = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select'),
+      SuppliersSearchbarValueElement = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > input');
 const AddSupplierDialog = q('div[add-supplier]');
 const ANS_Inputs = qlist('*[ans-input]');
 //#endregion
@@ -304,7 +311,7 @@ function PrepareSupplierUI() {
     q.Ajax.PostConfig('backend/search_for_suppliers.php', {
         data:  {
                 'sid': sessionStorage.getItem('sid'), 
-                'fetch_count' : 0
+                'type' : "fetch_count"
                },
         onstart: event => module.ui.LoadProgressBar.Start(),
         onprogress: event => {
@@ -325,59 +332,11 @@ function PrepareSupplierUI() {
                 else module.errors.Alert(respond.code);
                 return;
             }
-            Supplier.TotalCount = respond.extra;
+            SupplierSearch.TotalCount = respond.extra;
         }
     });
 
-    q.Ajax.PostConfig('backend/search_for_suppliers.php', {
-        data:  {
-                'sid': sessionStorage.getItem('sid'),
-                'limit': MoveNumber, 
-                'move' : 0, 'initial' : 0
-               },
-        onstart: event => module.ui.LoadProgressBar.Start(),
-        onprogress: event => {
-            let percent = (event.loaded /  event.total)*100;
-            module.ui.LoadProgressBar.Update(percent);
-        },
-        success: respond => {
-            module.ui.LoadProgressBar.End();
-            if(respond == null) {
-                module.errors.ServerNotResponding();
-                return;
-            }
-
-            respond = JSON.parse(respond);
-            
-            if(respond.state == 0 || respond.code != 0) {
-                if(respond.code == 3) module.errors.ShowSessionExpiredDialog();
-                else module.errors.Alert(respond.code);
-                return;
-            }
-            // check if we fetch no data...
-            if(respond.extra.length == 0) {
-                SuppliersListView.Html(
-                    `<img style="margin-top: 2em;" src="res/nothing_found_127px.png" alt="">
-                    <h2 style="font-family: DROID_NASK_BOLD;color: #546e7a;">لم يتم تسجيل أي مورد بعد!</h2>`
-                );
-                return;
-            }
-            Supplier.SuppliersList = respond.extra;
-            
-            let tempArray = Supplier.SuppliersList.pop();
-            Supplier.MinID = tempArray['min-id'];
-            Supplier.MaxID = tempArray['max-id'];
-            Supplier.CanMoveForword = tempArray['can-move-forward'];
-            Supplier.CanMoveBackword = tempArray['can-move-backword'];
-
-            //Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
-            //Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
-            
-            for(let i in Supplier.SuppliersList) 
-                AddSupplierView(Supplier.SuppliersList[i], i)
-
-        }
-    });
+    InitialSearchForSuppliers(0);
 }
 /**\ 
 |||| دالة تطلب بيانات المستخدمين
@@ -906,7 +865,15 @@ function SetBillCode() {
 
 
 
-
+/**\ 
+|||| إسترجاع قائمة ببيانات الموردين المسجلين وعرضهم
+||||  -----------------------------------
+||||
+|||| تمت الإضافة بتاريخ 10-10-2020 .. 12:09 م
+\**/
+function ResetSuppliersSearchProperties() {
+    Supplier
+}
 /**\ 
 |||| إسترجاع قائمة ببيانات الموردين المسجلين وعرضهم
 ||||  -----------------------------------
@@ -914,10 +881,57 @@ function SetBillCode() {
 |||| <param name='move'>0 means search, < 0 backword, > 0 forward</param>
 |||| تمت الإضافة بتاريخ 9-6-2020 .. 2:08 ص
 \**/
-function SearchForSuppliers(o, move = 0) {
-    let value = 'no-value';
-    let type = 'no-condition';
-    let queryData;
+function AdvancedSearchForSuppliers(movement) {
+    let value = SuppliersSearchbarTypeElement.Value().trim();
+    let type = SuppliersSearchbarValueElement.Value().trim();
+    
+    // use initial search type...
+    if(value === "" || type === "") { InitialSearchForSuppliers(movement); return;}
+    
+    let RequestHeader;
+    switch(movement) {
+        case  0: /* seach */    {
+            SupplierSearch.BoundaryState.length = 0;
+            SupplierSearch.SuppliersList.length = 0;
+            SuppliersSearchbarMoveBackward.Target.enabled = true;
+            SuppliersSearchbarMoveForward.Target.enabled  = true;
+            RequestHeader = {
+                            'sid': sessionStorage.getItem('sid'),
+                            'type' : "advanced", 'limit': MoveNumber, 
+                            'move' : 0, 'min':0,'max':0, 'search': type,
+                            'value': value
+                            }
+            break
+        };
+        case -1: /* forward */  {
+            let temp_bound = null;
+            if(SupplierSearch.BoundaryState.length == 1) {
+                temp_bound = SupplierSearch.BoundaryState[0];
+                console.log("Cannot move back anymore!");
+            }
+            else {
+                SupplierSearch.BoundaryState.pop();
+                temp_bound = SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1];
+            }
+            RequestHeader = {
+                'sid': sessionStorage.getItem('sid'),
+                'type' : "initial", 'limit': MoveNumber, 'move' : -1, 
+                'min':temp_bound[0]-1,
+                'max':temp_bound[1]
+                }
+            break
+        };
+        case  1: /* backward */ {
+            RequestHeader = {
+                            'sid': sessionStorage.getItem('sid'),
+                            'type' : "initial", 'limit': MoveNumber, 'move' : 1, 
+                            'min':SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1][0],
+                            'max':SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1][1]
+                            }
+            break
+        };
+        default: return;
+    }
     // SEARCH BUTTON
     if(move == 0) {
             type = q('div[suppliers-screen] > div[full-content-container] > div.ux-fragment[smaller2] > div.ux-fragment-header > select').Value();
@@ -937,8 +951,8 @@ function SearchForSuppliers(o, move = 0) {
             queryData = {
                 'sid': sessionStorage.getItem('sid'),
                 'move': move < 0 ? -1 : 1, 'limit': MoveNumber,
-                'min': 0,//Supplier.CurrentMinSupplierID,
-                'max': 0,//Supplier.CurrentMaxSupplierID,
+                'min': 0,//SupplierSearch.CurrentMinSupplierID,
+                'max': 0,//SupplierSearch.CurrentMaxSupplierID,
             };
     }
     
@@ -973,23 +987,141 @@ function SearchForSuppliers(o, move = 0) {
                 );
                 return;
             }
-            Supplier.SuppliersList = respond.extra;
+            SupplierSearch.SuppliersList = respond.extra;
             
-            let tempArray = Supplier.SuppliersList.pop();
-            Supplier.MinID = tempArray['min-id'];
-            Supplier.MaxID = tempArray['max-id'];
-            Supplier.CanMoveForword = tempArray['can-move-forward'];
-            Supplier.CanMoveBackword = tempArray['can-move-backword'];
+            let tempArray = SupplierSearch.SuppliersList.pop();
+            SupplierSearch.MinID = tempArray['min-id'];
+            SupplierSearch.MaxID = tempArray['max-id'];
+            SupplierSearch.CanMoveForword = tempArray['can-move-forward'];
+            SupplierSearch.CanMoveBackword = tempArray['can-move-backword'];
 
-            //Supplier.CurrentMinSupplierID = Supplier.SuppliersList[0].id;
-            //Supplier.CurrentMaxSupplierID = Supplier.SuppliersList[Supplier.SuppliersList.length-1].id;
+            //SupplierSearch.CurrentMinSupplierID = SupplierSearch.SuppliersList[0].id;
+            //SupplierSearch.CurrentMaxSupplierID = SupplierSearch.SuppliersList[SupplierSearch.SuppliersList.length-1].id;
             
-            for(let i in Supplier.SuppliersList) 
-                AddSupplierView(Supplier.SuppliersList[i], i);
+            for(let i in SupplierSearch.SuppliersList) 
+                AddSupplierView(SupplierSearch.SuppliersList[i], i);
             
             
         }
     });
+}
+
+/**\ 
+|||| إسترجاع قائمة ببيانات الموردين المسجلين وعرضهم
+||||  -----------------------------------
+|||| <param name='o'>the 'search' icon in $(SuppliersScreen)</param>
+|||| <param name='move'>0 means search, < 0 backword, > 0 forward</param>
+|||| تمت الإضافة بتاريخ 10-10-2020 .. 12:20 م
+\**/
+function InitialSearchForSuppliers(movement) {
+    let RequestHeader;
+    switch(movement) {
+        case  0: /* seach */    {
+            SupplierSearch.BoundaryState.length = 0;
+            SupplierSearch.SuppliersList.length = 0;
+            SuppliersSearchbarMoveBackward.Target.enabled = true;
+            SuppliersSearchbarMoveForward.Target.enabled  = true;
+            RequestHeader = {
+                            'sid': sessionStorage.getItem('sid'),
+                            'type' : "initial", 'limit': MoveNumber, 
+                            'move' : 0, 'min':0,'max':0
+                            }
+            break
+        };
+        case -1: /* forward */  {
+            let temp_bound = null;
+            if(SupplierSearch.BoundaryState.length == 1) {
+                temp_bound = SupplierSearch.BoundaryState[0];
+                console.log("Cannot move back anymore!");
+            }
+            else {
+                SupplierSearch.BoundaryState.pop();
+                temp_bound = SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1];
+            }
+            RequestHeader = {
+                'sid': sessionStorage.getItem('sid'),
+                'type' : "initial", 'limit': MoveNumber, 'move' : -1, 
+                'min':temp_bound[0]-1,
+                'max':temp_bound[1]
+                }
+            break
+        };
+        case  1: /* backward */ {
+            RequestHeader = {
+                            'sid': sessionStorage.getItem('sid'),
+                            'type' : "initial", 'limit': MoveNumber, 'move' : 1, 
+                            'min':SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1][0],
+                            'max':SupplierSearch.BoundaryState[SupplierSearch.BoundaryState.length-1][1]
+                            }
+            break
+        };
+        default: return;
+    }
+    q.Ajax.PostConfig('backend/search_for_suppliers.php', {
+        data:  RequestHeader,
+        onstart: event => module.ui.LoadProgressBar.Start(),
+        onprogress: event => {
+            let percent = (event.loaded /  event.total)*100;
+            module.ui.LoadProgressBar.Update(percent);
+        },
+        success: respond => {
+            module.ui.LoadProgressBar.End();
+            if(respond == null) {
+                module.errors.ServerNotResponding();
+                return;
+            }
+
+            respond = JSON.parse(respond);
+            
+            if(respond.state == 0 || respond.code != 0) {
+                if(respond.code == 3) module.errors.ShowSessionExpiredDialog();
+                else module.errors.Alert(respond.code);
+                return;
+            }
+            // check if we fetch no data...
+            if(respond.extra.length == 0) {
+                SuppliersListView.Html(
+                    `<img style="margin-top: 2em;" src="res/nothing_found_127px.png" alt="">
+                    <h2 style="font-family: DROID_NASK_BOLD;color: #546e7a;">لم يتم تسجيل أي مورد بعد!</h2>`
+                );
+                return;
+            }
+            else
+                SuppliersListView.Html("");
+            SupplierSearch.SuppliersList = respond.extra;
+            
+            let tempArray = SupplierSearch.SuppliersList.pop();
+            SupplierSearch.MinID = tempArray['min-id'];
+            SupplierSearch.MaxID = tempArray['max-id'];
+            SupplierSearch.CanMoveForword = tempArray['can-move-forward'];
+            SupplierSearch.CanMoveBackword = tempArray['can-move-backword'];
+            SupplierSearch.TotalCount = tempArray['count'];
+
+
+            SuppliersSearchbarMoveBackward.Target.enabled = SupplierSearch.CanMoveBackword;
+            SuppliersSearchbarMoveForward.Target.enabled = SupplierSearch.CanMoveForword;
+            // save state to use it later 
+            if(movement != -1) {
+                SupplierSearch.BoundaryState.push([
+                    SupplierSearch.SuppliersList[0].id, 
+                    SupplierSearch.SuppliersList[SupplierSearch.SuppliersList.length-1].id
+                ]);
+            }
+
+            for(let i in SupplierSearch.SuppliersList) 
+                AddSupplierView(SupplierSearch.SuppliersList[i], i)
+
+        }
+    });
+}
+
+function SuppliersSearchOperator_Click(o,movement) {
+    if(!o.enabled) return;
+    if(SupplierSearch.Type == "initial")
+        InitialSearchForSuppliers(movement);
+    else if(SupplierSearch.Type == "advanced")
+        AdvancedSearchForSuppliers(movement);
+
 }
 /**\ 
 |||| عرض بيانات المورد
@@ -1037,7 +1169,7 @@ function ViewSupplierProfile(json) {
     json.phone.split(',').forEach(e => phones += (e+','));
     SupplierDataView.Get(5).Childs()[1].Text(phones.substring(0, phones.length-1));
     SupplierDataView.Get(7).do('click', event => {
-        q.Ajax.PostConfig('backend/delete_supplier.php', {
+        q.Ajax.PostConfig('backend/delete_SupplierSearch.php', {
             data: {
                     'sid': sessionStorage.getItem('sid'), 
                     'id': json.id

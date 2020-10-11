@@ -112,42 +112,108 @@ def GetSuppliersCount():
         commandString = 'select count(id) from suppliers;'
         cmd = MySqlCommand(commandString,con)
         rdr = cmd.ExecuteReader()
+        count = 0
         if not rdr.Read():
             rdr.Close()
             return [False, 5]
         else:
+            count = rdr[0]
             rdr.Close()
-            return [True, 0, 6]
+            return [True, 0, count]
     except Exception as exp:
         LogError('GetSuppliersCount', exp)
         return [False, -1]
 
+def InitialSearch(move, move_operator, limit, bounds):
+    try:
+        limit = str(limit)
+        extra = '[' 
+        query = "SELECT * FROM suppliers LIMIT "+limit+";"
+
+        if move == 1:
+            if bounds == None: 
+                LogError("InitialSearch", "Arg 'move' require 'bounds'. but it set to None")
+                return '{"state":0, "code": 2, "extra": ""}'
+            query = "SELECT * FROM suppliers WHERE id >= (select min(id) from suppliers where id > " + str(bounds[1]) + ") LIMIT "+limit+";"
+        elif move == -1:
+            if bounds == None: 
+                LogError("InitialSearch", "Arg 'move' require 'bounds'. but it set to None")
+                return '{"state":0, "code": 2, "extra": ""}'
+            query = "SELECT * FROM suppliers WHERE id >= (select min(id) from suppliers where id > " + str(bounds[0]) + ") LIMIT "+limit+";"
+
+        cmd = MySqlCommand(query,con)
+        rdr = cmd.ExecuteReader()
+        
+        count = 0
+        firstFetchedID = 0
+        lastFetchedID = 0
+        while rdr.Read():
+            if count == 0:
+                firstFetchedID = rdr[0]
+            count += 1
+            debts = rdr[7]
+            if str(rdr[7]) == "":
+                debts = '[]'
+            lastFetchedID = rdr[0]
+            extra += '{"id": '+str(rdr[0])+',"fullname":"'+rdr[1]+'", "phone": "'+rdr[2]+'", "resident": "'+rdr[3]+'", "work": "'+rdr[4]+'", "position": '+str(rdr[5])+', "date": "'+rdr[6]+'", "debts": '+debts+'},'
+
+        rdr.Close()
+        # GET MAX, MIN VALUES OF id
+        query = "SELECT min(id), max(id), count(id) FROM suppliers;"
+        cmd = MySqlCommand(query,con)
+        rdr = cmd.ExecuteReader()
+        if rdr.Read():
+            canMoveForward = "false"
+            if not (rdr[1] == lastFetchedID):
+                canMoveForward = "true"
+
+            canMoveBackword = "true"
+            if (rdr[0] == firstFetchedID):
+                canMoveBackword = "false"
+            extra += '{"can-move-forward": '+canMoveForward+', "max-id":'+str(rdr[1])+', "can-move-backword": '+canMoveBackword+', "min-id": '+str(rdr[0])+', "count": '+str(rdr[2])+'}'
+        extra += ']' 
+        return '{"state": 1, "code": 0, "extra": '+extra+'}'
+    except Exception as exp:
+        LogError("___main___", exp)
+        return '{"state":0, "code": -1, "extra": ""}'
+
 
 def HandleRequest():
-    #
-    # fetch count
-    #
-    if ServerParams.HasKey('fetch_count'):
-        result = GetSuppliersCount()
-        if not result[0]:
-            ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+    if not ServerParams.HasKey('type'):
+        return '{"state":0, "code": 2, "extra": ""}'
+    else:
+        RequestType = ServerParams.Get('type').strip()
+        #
+        # fetch count
+        #
+        if RequestType == "fetch_count":
+            result = GetSuppliersCount()
+            if not result[0]:
+                return '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
+            else:
+                return '{"state":1, "code": '+str(result[1]) +', "extra": '+str(result[2])+'}' 
         else:
-            ServerResult = '{"state":1, "code": '+str(result[1]) +', "extra": '+str(result[2])+'}' 
-    #
-    # fetch count
-    #
-    elif ServerParams.HasKey('initial'):
-        pass
-    #
-    # fetch count
-    #
-    elif ServerParams.HasKey('search'):
-        pass
-    #
-    # fetch count
-    #
-    elif ServerParams.HasKey('move'):
-        pass
+            if not ServerParams.HasKey('move') or not ServerParams.HasKey('limit') or not ServerParams.HasKey('min') or not ServerParams.HasKey('max'):
+                return '{"state":0, "code": 2, "extra": ""}'
+            
+            min = int(ServerParams.Get('min').strip())
+            max = int(ServerParams.Get('max').strip())
+            limit = int(ServerParams.Get('limit').strip())
+            move = int(ServerParams.Get('move').strip())
+            moveOperator = ">="
+            if move == 0: moveOperator = ">="
+            elif move == 1: moveOperator = ">"
+            elif move == -1: moveOperator = "<"
+            
+            #
+            # intial
+            #
+            if RequestType == "initial":
+                if move == 0:
+                    return InitialSearch(move, moveOperator, limit, None)
+                else:
+                    return InitialSearch(move, moveOperator, limit, [min, max])
+    
 
 
 
@@ -157,7 +223,7 @@ try:
     if not result[0]:
         ServerResult = '{"state":0, "code": '+str(result[1]) +', "extra": ""}' 
     else:
-        HandleRequest()
+        ServerResult = HandleRequest()
 except Exception as exp:
     con.Close()
     LogError("___main___", exp)
